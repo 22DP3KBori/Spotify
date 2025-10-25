@@ -1,10 +1,3 @@
-Отлично 😎
-Вот пример красивого и аккуратного **README.md** для твоего проекта — в стиле современных FastAPI-приложений.
-Он выглядит профессионально, лаконично и сразу показывает, что у тебя продуманная архитектура 👇
-
----
-
-```markdown
 # 🏆 Tournament Platform
 
 A modern and intuitive web platform for creating, joining, and managing online tournaments.  
@@ -40,24 +33,22 @@ Built with **FastAPI**, **Jinja2**, and **SQLAlchemy** — featuring authenticat
 ## 📁 Project Structure
 
 ```
-
 backend/
-├── main.py                # App entry point
-├── database.py            # DB engine & session config
-├── models.py              # SQLAlchemy ORM models
-├── routers/
-│   ├── auth.py            # Register / Login logic
-│   └── profile.py         # Profile setup & avatar upload
-├── static/
-│   ├── style.css          # Index page styles
-│   ├── register_login.css # Auth page styles
-│   └── uploads/           # User avatars
-└── templates/
-├── index.html
-├── register_login.html
-└── setup_profile.html
-
-````
+ ├── main.py                # App entry point
+ ├── database.py            # DB engine & session config
+ ├── models.py              # SQLAlchemy ORM models
+ ├── routers/
+ │   ├── auth.py            # Register / Login logic
+ │   └── profile.py         # Profile setup & avatar upload
+ ├── static/
+ │   ├── style.css          # Index page styles
+ │   ├── register_login.css # Auth page styles
+ │   └── uploads/           # User avatars
+ └── templates/
+     ├── index.html
+     ├── register_login.html
+     └── setup_profile.html
+```
 
 ---
 
@@ -67,46 +58,43 @@ backend/
    ```bash
    git clone https://github.com/your-username/tournament-platform.git
    cd tournament-platform
-````
+   ```
 
 2. **Create a virtual environment**
-
    ```bash
    python3 -m venv venv
    source venv/bin/activate
    ```
 
 3. **Install dependencies**
-
    ```bash
    pip install -r requirements.txt
    ```
 
 4. **Run the app**
-
    ```bash
    uvicorn backend.main:app --reload
    ```
 
-Then open:
+Then open:  
 👉 [http://127.0.0.1:8000](http://127.0.0.1:8000)
 
 ---
 
 ## 🧠 Roadmap
 
-* [ ] Tournament creation UI
-* [ ] Team management
-* [ ] Match scheduling
-* [ ] Leaderboards
-* [ ] JWT-based authentication
+- [ ] Tournament creation UI  
+- [ ] Team management  
+- [ ] Match scheduling  
+- [ ] Leaderboards  
+- [ ] JWT-based authentication  
 
 ---
 
 ## 💡 Author
 
-**Kirill Quwa**
-🎮 Developer & Designer of Tournament Platform
+**Kirill Quwa**  
+🎮 Developer & Designer of Tournament Platform  
 📧 Contact: *add later via contact form*
 
 ---
@@ -114,4 +102,3 @@ Then open:
 ## 🛠 License
 
 MIT License © 2025 — Tournament Platform
-
