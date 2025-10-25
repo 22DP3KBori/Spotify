@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Setup Your Profile</title>
+  <link rel="stylesheet" href="/static/style.css" />
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+</head>
+
+<body>
+  <!-- HEADER -->
+  <header class="navbar">
+    <div class="logo"><i class="fa-solid fa-trophy"></i> Tournament Platform</div>
+    <nav>
+      <a href="/">Home</a>
+      <a href="/tournaments">Tournaments</a>
+      <a href="/auth" class="btn small ghost">Logout</a>
+    </nav>
+  </header>
+
+  <!-- PROFILE SETUP FORM -->
+  <section class="profile-setup">
+    <div class="setup-container">
+      <h2>Complete Your Profile</h2>
+      <p>Tell us a bit more about yourself so others can get to know you.</p>
+
+      <form action="/save-profile" method="post" enctype="multipart/form-data">
+        <div class="form-group">
+          <label>First Name</label>
+          <input type="text" name="first_name" placeholder="Enter your first name" required>
+        </div>
+
+        <div class="form-group">
+          <label>Last Name</label>
+          <input type="text" name="last_name" placeholder="Enter your last name" required>
+        </div>
+
+        <div class="form-group">
+          <label>Nickname</label>
+          <input type="text" name="nickname" placeholder="Choose a nickname" required>
+        </div>
+
+        <div class="form-group">
+          <label>Country</label>
+          <input type="text" name="country" placeholder="e.g. Germany, USA" required>
+        </div>
+
+        <div class="form-group">
+          <label>Date of Birth</label>
+          <input type="date" name="dob" required>
+        </div>
+
+        <div class="form-group">
+          <label>Favorite Game / Tournament Type</label>
+          <select name="category">
+            <option value="fps">FPS / Shooter</option>
+            <option value="moba">MOBA</option>
+            <option value="sports">Sports</option>
+            <option value="strategy">Strategy</option>
+            <option value="fighting">Fighting</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label>Profile Photo (optional)</label>
+          <input type="file" name="avatar" accept="image/*">
+        </div>
+
+        <button type="submit" class="btn">Save and Continue</button>
+      </form>
+    </div>
+  </section>
+
+  <footer>
+    <p>© 2025 Tournament Platform — All rights reserved.</p>
+  </footer>
+</body>
+</html>

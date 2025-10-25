@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Tournament Platform</title>
+  <link rel="stylesheet" href="/static/style.css" />
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+</head>
+
+<body>
+  <!-- HEADER -->
+  <header class="navbar">
+    <div class="logo"><i class="fa-solid fa-trophy"></i> Tournament Platform</div>
+    <nav>
+      <a href="/">Home</a>
+      <a href="#tournaments">Tournaments</a>
+      <a href="#teams">Teams</a>
+      <a href="#contact">Contact</a>
+
+      {% if user %}
+        <a href="/logout" class="btn small ghost">
+          Logout ({{ user.nickname or user.email }})
+        </a>
+      {% else %}
+        <a href="/auth" class="btn small ghost">Login</a>
+      {% endif %}
+    </nav>
+  </header>
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="hero-content">
+      {% if user %}
+        <h1>Welcome back, {{ user.nickname or user.first_name or user.email }}!</h1>
+        <p>Ready to join your next tournament?</p>
+      {% else %}
+        <h1>Welcome to Tournament Platform</h1>
+        <p>Organize, join, and manage tournaments with ease.</p>
+      {% endif %}
+      <a href="/create-tournament" class="btn">Create Tournament</a>
+    </div>
+  </section>
+
+  <!-- ACTION CARDS -->
+  <section class="actions">
+    <h2>Main Actions</h2>
+    <div class="card-container">
+      <div class="card">
+        <img src="https://images.unsplash.com/photo-1521412644187-c49fa049e84d?auto=format&fit=crop&w=800&q=60" alt="Create Tournament">
+        <h3>Create Tournament</h3>
+        <p>Start your own tournament and invite teams to compete.</p>
+        <a href="/create-tournament" class="btn gradient">Create</a>
+      </div>
+      <div class="card">
+        <img src="https://images.unsplash.com/photo-1531512073830-ba890ca4eba2?auto=format&fit=crop&w=800&q=60" alt="Register Participant">
+        <h3>Register Participant</h3>
+        <p>Join exciting tournaments and showcase your skills.</p>
+        <a href="/register" class="btn gradient">Join</a>
+      </div>
+      <div class="card">
+        <img src="https://images.unsplash.com/photo-1605296867304-46d5465a13f1?auto=format&fit=crop&w=800&q=60" alt="Browse Tournaments">
+        <h3>Browse Tournaments</h3>
+        <p>View all ongoing and upcoming tournaments in one place.</p>
+        <a href="/tournaments" class="btn gradient">Browse</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- SPONSORS -->
+  <section class="sponsors">
+    <h2>Our Sponsors</h2>
+    <p>We thank our amazing partners and sponsors for supporting competitive spirit.</p>
+    <div class="sponsor-logos">
+      <span>⚡ EnerGator</span>
+      <span>🏆 GameHub</span>
+      <span>🎮 Esportify</span>
+      <span>🚀 StreamIt</span>
+      <span>🎯 ProArena</span>
+    </div>
+  </section>
+
+  <!-- CONTACT -->
+  <section class="contact" id="contact">
+    <div class="contact-content">
+      <div class="contact-img">
+        <img src="https://images.unsplash.com/photo-1574629810360-7efbbe195018?auto=format&fit=crop&w=1000&q=60" alt="Contact Us">
+      </div>
+      <div class="contact-form">
+        <h2>Contact Us</h2>
+        <form action="/send-message" method="post">
+          <input type="text" name="first_name" placeholder="First Name" required>
+          <input type="text" name="last_name" placeholder="Last Name" required>
+          <input type="email" name="email" placeholder="Email" required>
+          <textarea name="message" placeholder="Message" rows="4" required></textarea>
+          <button type="submit" class="btn">Send Message</button>
+        </form>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer>
+    <p>© 2025 Tournament Platform — All rights reserved.</p>
+  </footer>
+</body>
+</html>
