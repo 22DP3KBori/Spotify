@@ -93,9 +93,9 @@ Then open:
 
 ## 💡 Author
 
-**Kirill Quwa**  
+**Kirills Borisovs**  
 🎮 Developer & Designer of Tournament Platform  
-📧 Contact: *add later via contact form*
+📧 Contact: *kirja2006@gmail.com*
 
 ---
 
