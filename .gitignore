@@ -1,0 +1,30 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.db
+*.sqlite3
+
+# FastAPI / Virtual environments
+.env
+venv/
+.env/
+.venv/
+env/
+ENV/
+
+# IDE / macOS
+.idea/
+.vscode/
+.DS_Store
+
+# Uploads and static generated files
+backend/static/uploads/
+
+# Logs
+*.log
+
+# Byte-compiled files
+*.py[cod]
+*$py.class
