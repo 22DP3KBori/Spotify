@@ -4,56 +4,158 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Setup Your Profile</title>
-  <link rel="stylesheet" href="/static/style.css" />
+  <link rel="stylesheet" href="/static/style.css?v=2" />
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+  <style>
+    
+
+    .setup-container {
+      max-width: 600px;
+      margin: 80px auto;
+      background: white;
+      padding: 40px;
+      border-radius: 16px;
+      box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+    }
+
+    h2 {
+      color: #FF416C;
+      margin-bottom: 10px;
+      text-align: center;
+    }
+
+    p {
+      text-align: center;
+      margin-bottom: 30px;
+      color: #555;
+    }
+
+    p.foot{
+        color: white;
+        margin-bottom: 0px;
+    }
+
+    .form-group {
+      margin-bottom: 20px;
+    }
+
+    label {
+      display: block;
+      font-weight: 500;
+      margin-bottom: 8px;
+    }
+
+    input, select, textarea {
+      width: 100%;
+      padding: 10px;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      font-size: 14px;
+      outline: none;
+      transition: border-color 0.3s;
+    }
+
+    input:focus, select:focus, textarea:focus {
+      border-color: #1E88E5;
+    }
+
+    button {
+      width: 100%;
+      background: linear-gradient(90deg, #FF7043, #FF416C);
+      color: white;
+      padding: 12px;
+      border: none;
+      border-radius: 8px;
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+
+    button:hover {
+      opacity: 0.9;
+    }
+
+    .error-message {
+      color: #FF7043;
+      background: rgba(255, 112, 67, 0.1);
+      padding: 10px;
+      border-radius: 8px;
+      margin-bottom: 15px;
+      text-align: center;
+    }
+  </style>
 </head>
 
 <body>
-  <!-- HEADER -->
   <header class="navbar">
     <div class="logo"><i class="fa-solid fa-trophy"></i> Tournament Platform</div>
-    <nav>
-      <a href="/">Home</a>
-      <a href="/tournaments">Tournaments</a>
-      <a href="/auth" class="btn small ghost">Logout</a>
-    </nav>
   </header>
 
-  <!-- PROFILE SETUP FORM -->
   <section class="profile-setup">
     <div class="setup-container">
       <h2>Complete Your Profile</h2>
-      <p>Tell us a bit more about yourself so others can get to know you.</p>
+      <p>All fields are required — help others get to know you better!</p>
+
+      {% if error %}
+        <div class="error-message">{{ error }}</div>
+      {% endif %}
 
       <form action="/save-profile" method="post" enctype="multipart/form-data">
         <div class="form-group">
-          <label>First Name</label>
-          <input type="text" name="first_name" placeholder="Enter your first name" required>
-        </div>
+            <label>First Name</label>
+            <input type="text" name="first_name" required placeholder="Enter your first name">
+            {% if first_name_error %}
+                <p class="error-message" style="margin-top:5px;">{{ first_name_error }}</p>
+            {% endif %}
+            </div>
 
         <div class="form-group">
-          <label>Last Name</label>
-          <input type="text" name="last_name" placeholder="Enter your last name" required>
+            <label>Last Name</label>
+            <input type="text" name="last_name" required placeholder="Enter your last name">
+            {% if last_name_error %}
+                <p class="error-message" style="margin-top:5px;">{{ last_name_error }}</p>
+            {% endif %}
         </div>
 
+
         <div class="form-group">
-          <label>Nickname</label>
-          <input type="text" name="nickname" placeholder="Choose a nickname" required>
+            <label>Nickname</label>
+            <input type="text" name="nickname" id="nicknameInput" placeholder="Choose a nickname" required>
+            <p id="nicknameStatus" class="nickname-status" style="margin-top: 2px;"></p>
         </div>
+
 
         <div class="form-group">
           <label>Country</label>
-          <input type="text" name="country" placeholder="e.g. Germany, USA" required>
+          <select name="country" required>
+            <option value="">Select your country</option>
+            <option value="Latvia">🇱🇻 Latvia</option>
+            <option value="Russia">🇷🇺 Russia</option>
+            <option value="Germany">🇩🇪 Germany</option>
+            <option value="France">🇫🇷 France</option>
+            <option value="United States">🇺🇸 United States</option>
+            <option value="United Kingdom">🇬🇧 United Kingdom</option>
+            <option value="Poland">🇵🇱 Poland</option>
+            <option value="Ukraine">🇺🇦 Ukraine</option>
+            <option value="Estonia">🇪🇪 Estonia</option>
+            <option value="Lithuania">🇱🇹 Lithuania</option>
+          </select>
         </div>
 
         <div class="form-group">
-          <label>Date of Birth</label>
-          <input type="date" name="dob" required>
+            <label>Date of Birth</label>
+            <input type="date" name="dob" required id="dobInput">
+            {% if dob_error %}
+                <p class="error-message" style="margin-top:5px;">{{ dob_error }}</p>
+            {% endif %}
         </div>
+
 
         <div class="form-group">
           <label>Favorite Game / Tournament Type</label>
-          <select name="category">
+          <select name="category" required>
+            <option value="">Select your category</option>
             <option value="fps">FPS / Shooter</option>
             <option value="moba">MOBA</option>
             <option value="sports">Sports</option>
@@ -63,17 +165,51 @@
         </div>
 
         <div class="form-group">
-          <label>Profile Photo (optional)</label>
+          <label>Profile Photo</label>
           <input type="file" name="avatar" accept="image/*">
         </div>
 
-        <button type="submit" class="btn">Save and Continue</button>
+        <button type="submit">Save Profile</button>
       </form>
     </div>
   </section>
 
   <footer>
-    <p>© 2025 Tournament Platform — All rights reserved.</p>
+    <p class="foot">© 2025 Tournament Platform — All rights reserved.</p>
   </footer>
 </body>
+
+
+<script>
+  const nicknameInput = document.getElementById("nicknameInput");
+  const nicknameStatus = document.getElementById("nicknameStatus");
+  let timeout = null;
+
+  nicknameInput.addEventListener("input", () => {
+    clearTimeout(timeout);
+    nicknameStatus.textContent = "Checking...";
+    nicknameStatus.style.color = "#666";
+
+    timeout = setTimeout(async () => {
+      const nickname = nicknameInput.value.trim();
+      if (nickname.length < 3) {
+        nicknameStatus.textContent = "Too short (min 3 chars)";
+        nicknameStatus.style.color = "red";
+        return;
+      }
+
+      const response = await fetch(`/check-nickname?nickname=${encodeURIComponent(nickname)}`);
+      const data = await response.json();
+
+      if (data.available) {
+        nicknameStatus.textContent = "✅ Available";
+        nicknameStatus.style.color = "green";
+      } else {
+        nicknameStatus.textContent = "❌ Taken";
+        nicknameStatus.style.color = "red";
+      }
+    }, 400);
+  });
+</script>
+
 </html>
