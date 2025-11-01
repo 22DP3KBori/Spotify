@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Setup Your Profile</title>
-  <link rel="stylesheet" href="/static/style.css?v=2" />
+  <link rel="stylesheet" href="/static/style.css" />
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
   <style>
     
@@ -127,20 +127,13 @@
 
 
         <div class="form-group">
-          <label>Country</label>
-          <select name="country" required>
-            <option value="">Select your country</option>
-            <option value="Latvia">🇱🇻 Latvia</option>
-            <option value="Russia">🇷🇺 Russia</option>
-            <option value="Germany">🇩🇪 Germany</option>
-            <option value="France">🇫🇷 France</option>
-            <option value="United States">🇺🇸 United States</option>
-            <option value="United Kingdom">🇬🇧 United Kingdom</option>
-            <option value="Poland">🇵🇱 Poland</option>
-            <option value="Ukraine">🇺🇦 Ukraine</option>
-            <option value="Estonia">🇪🇪 Estonia</option>
-            <option value="Lithuania">🇱🇹 Lithuania</option>
-          </select>
+            <label>Country</label>
+            <select name="country" required>
+                <option value="">Select your country</option>
+                {% for country in countries %}
+                <option value="{{ country.name }}">{{ country.flag }} {{ country.name }}</option>
+                {% endfor %}
+            </select>
         </div>
 
         <div class="form-group">
@@ -152,17 +145,24 @@
         </div>
 
 
+        <!-- 🏆 Любимые виды игр -->
         <div class="form-group">
-          <label>Favorite Game / Tournament Type</label>
-          <select name="category" required>
-            <option value="">Select your category</option>
-            <option value="fps">FPS / Shooter</option>
-            <option value="moba">MOBA</option>
-            <option value="sports">Sports</option>
-            <option value="strategy">Strategy</option>
-            <option value="fighting">Fighting</option>
-          </select>
+        <label>Favorite Game Types</label>
+        <div class="checkbox-group">
+            <label><input type="checkbox" name="category" value="fps"> 🎯 FPS / Shooter</label>
+            <label><input type="checkbox" name="category" value="moba"> ⚔️ MOBA</label>
+            <label><input type="checkbox" name="category" value="sports"> ⚽ Sports</label>
+            <label><input type="checkbox" name="category" value="strategy"> ♟️ Strategy</label>
+            <label><input type="checkbox" name="category" value="fighting"> 🥋 Fighting</label>
+            <label><input type="checkbox" name="category" value="racing"> 🏎️ Racing</label>
+            <label><input type="checkbox" name="category" value="battle_royale"> 🔥 Battle Royale</label>
+            <label><input type="checkbox" name="category" value="card"> 🃏 Card Games</label>
+            <label><input type="checkbox" name="category" value="simulation"> 🛠️ Simulation</label>
+            <label><input type="checkbox" name="category" value="arcade"> 🎮 Arcade</label>
         </div>
+        <small class="hint">You can select several options.</small>
+        </div>
+
 
         <div class="form-group">
           <label>Profile Photo</label>

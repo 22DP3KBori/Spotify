@@ -1,0 +1,46 @@
+<header class="navbar">
+  <div class="logo"><i class="fa-solid fa-trophy"></i> Tournament Platform</div>
+  <nav>
+    <a href="/">Home</a>
+    <a href="#tournaments">Tournaments</a>
+    <a href="#teams">Teams</a>
+    <a href="#contact">Contact</a>
+
+    {% if current_user(request) %}
+        <a href="/profile">Profile</a>
+        <a href="/logout" class="btn small ghost">
+            Logout ({{ current_user(request).nickname or current_user(request).email }})
+        </a>
+    {% else %}
+        <a href="/auth" class="btn small ghost">Login</a>
+    {% endif %}
+
+  </nav>
+  <style>
+  .flash {
+      width: 100%;
+      padding: 14px;
+      text-align: center;
+      font-weight: 600;
+      color: white;
+      animation: fadeIn .3s ease-out;
+  }
+
+  .flash-success { background: #4CAF50; }
+  .flash-error { background: #E53935; }
+  .flash-info { background: #2196F3; }
+
+  @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(-5px); }
+      to { opacity: 1; transform: translateY(0); }
+  }
+  </style>
+
+</header>
+
+{% if message %}
+<div class="flash flash-{{ message.type }}">
+    {{ message.text }}
+</div>
+{% endif %}
+

@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Verify Email</title>
+    <link rel="stylesheet" href="/static/style.css">
+
+    <style>
+        .verify-box {
+            max-width: 450px;
+            margin: 80px auto;
+            padding: 30px;
+            background: #fff;
+            border-radius: 12px;
+            box-shadow: 0 4px 14px rgba(0,0,0,0.08);
+        }
+
+        .verify-box h2 {
+            text-align: center;
+            margin-bottom: 15px;
+        }
+
+        input[type="text"] {
+            width: 100%;
+            padding: 12px;
+            border-radius: 8px;
+            border: 1px solid #ddd;
+            margin-top: 10px;
+            font-size: 16px;
+        }
+
+        .btn-primary {
+            width: 100%;
+            margin-top: 15px;
+            padding: 12px;
+            background: linear-gradient(90deg, #FF7043, #FF416C);
+            border: none;
+            border-radius: 8px;
+            color: white;
+            font-weight: 700;
+            cursor: pointer;
+        }
+
+        .message {
+            padding: 10px;
+            border-radius: 6px;
+            margin-top: 10px;
+            text-align: center;
+        }
+
+        .success { background: #d2ffd6; color: #0a7f1f; }
+        .error { background: #ffd2d2; color: #b30000; }
+    </style>
+</head>
+<body>
+    {% include "layout/navbar.html" %}
+
+    <div class="verify-box">
+        <h2>Verify your email</h2>
+        <p style="text-align:center;color:#555;font-size:14px">
+            We sent a 6-digit code to <b>{{ email }}</b>
+        </p>
+
+        {% if message %}
+        <div class="message {{ message.type }}">{{ message.text }}</div>
+        {% endif %}
+
+        <form action="/verify-email-code" method="post">
+            <input type="hidden" name="email" value="{{ email }}">
+            <input type="text" name="code" placeholder="Enter verification code" required>
+            <button class="btn-primary">Verify Email</button>
+        </form>
+    </div>
+
+    {% include "layout/footer.html" %}
+</body>
+</html>

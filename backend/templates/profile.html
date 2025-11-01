@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>{{ user.nickname }} — Profile</title>
+<link rel="stylesheet" href="/static/style.css">
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+
+<style>
+
+
+.profile-wrapper {
+    max-width: 900px;
+    margin: 40px auto;
+}
+
+.profile-grid {
+  display: grid;
+  grid-template-columns: 280px 1fr;
+  gap: 25px;
+}
+
+/* LEFT SIDEBAR */
+.profile-side {
+  background: white;
+  padding: 25px;
+  border-radius: 12px;
+  text-align: center;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.07);
+}
+
+.profile-photo {
+  width: 120px;
+  height: 120px;
+  border-radius: 12px;
+  object-fit: cover;
+  border: 3px solid #FF7043;
+  margin-bottom: 15px;
+}
+
+.profile-side h2 {
+  margin-bottom: 8px;
+  font-size: 22px;
+  font-weight: 700;
+}
+
+.country {
+  font-size: 14px;
+  margin-bottom: 20px;
+}
+
+/* RANK */
+.rank-box {
+  background: #fafafa;
+  padding: 12px;
+  border-radius: 10px;
+  margin-bottom: 20px;
+  border: 1px solid #eee;
+}
+
+.rank-title {
+  font-size: 13px;
+  opacity: 0.7;
+}
+
+.rank-value {
+  font-size: 16px;
+  font-weight: 700;
+  margin: 4px 0;
+  color: #FF7043;
+}
+
+.rank-progress {
+  height: 8px;
+  background: #eee;
+  border-radius: 8px;
+  margin: 6px 0;
+  overflow: hidden;
+}
+
+.rank-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #FF7043, #FF416C);
+}
+
+/* MAIN */
+.profile-main .profile-banner {
+  background: linear-gradient(90deg, #FF7043, #FF416C);
+  padding: 25px;
+  border-radius: 12px;
+  color: white;
+  margin-bottom: 20px;
+}
+
+.card {
+  background: white;
+  padding: 22px;
+  border-radius: 12px;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.07);
+  margin-bottom: 20px;
+}
+
+.card h3 {
+  margin-bottom: 15px;
+}
+
+.full {
+  width: 100%;
+}
+
+.profile-main h1 {
+  font-size: 24px;
+  margin-bottom: 8px;
+}
+
+/* Tags */
+.tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.tag {
+  background: #FF7043;
+  padding: 6px 14px;
+  border-radius: 20px;
+  font-size: 13px;
+  color: white;
+  font-weight: 500;
+}
+
+
+.profile-banner {
+    background: linear-gradient(90deg, #FF7043, #FF416C);
+    padding: 30px;
+    border-radius: 14px;
+    display: flex;
+    align-items: center;
+    gap: 25px;
+    color: white;
+}
+
+.profile-banner img {
+    width: 120px;
+    height: 120px;
+    border-radius: 12px;
+    object-fit: cover;
+    border: 3px solid rgba(255,255,255,0.8);
+}
+
+.profile-info h2 {
+    font-size: 26px;
+    font-weight: 700;
+    margin-bottom: 8px;
+}
+
+.profile-info p {
+    margin: 3px 0;
+    font-size: 14px;
+}
+
+.rank-badge {
+    background: rgba(255,255,255,0.2);
+    padding: 5px 12px;
+    border-radius: 6px;
+    font-size: 13px;
+    display: inline-block;
+    margin-top: 5px;
+}
+
+.profile-section {
+    background: white;
+    padding: 25px;
+    border-radius: 12px;
+    margin-top: 25px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.07);
+}
+
+.section-title {
+    font-size: 18px;
+    font-weight: 600;
+    margin-bottom: 12px;
+}
+
+.tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.tag {
+    background: #FF7043;
+    padding: 6px 14px;
+    border-radius: 20px;
+    font-size: 13px;
+    color: white;
+    font-weight: 500;
+}
+
+.edit-btn {
+    background: linear-gradient(90deg, #FF7043, #FF416C);
+    color: white;
+    padding: 10px 16px;
+    margin-top: 18px;
+    border-radius: 8px;
+    font-weight: 600;
+    border: none;
+    cursor: pointer;
+    transition: .2s;
+}
+
+.edit-btn:hover {
+    opacity: .85;
+}
+</style>
+</head>
+
+<body>
+
+{% include "layout/navbar.html" %}
+
+<div class="profile-wrapper">
+
+  <div class="profile-grid">
+
+    <!-- LEFT SIDEBAR -->
+    <!-- LEFT SIDEBAR -->
+    <aside class="profile-side">
+    <img src="{{ user.avatar or '/static/img/default-avatar.png' }}" class="profile-photo">
+
+    <h2>{{ user.nickname }}</h2>
+    <p class="country">
+        <i class="fa-solid fa-flag"></i> {{ user.country }}
+    </p>
+
+    <div class="rank-box">
+        <p class="rank-title">Current Rank</p>
+        <p class="rank-value">
+        <i class="fa-solid fa-trophy"></i> Bronze Player
+        </p>
+        <div class="rank-progress">
+        <div class="rank-fill" style="width: 30%"></div>
+        </div>
+        <small>XP: 320 / 1000</small>
+    </div>
+
+    <a href="/edit-profile" class="edit-btn full">
+        <i class="fa-solid fa-pen"></i> Edit Profile
+    </a>
+    <br><br>
+    <a href="/account-security" class="edit-btn full" style="margin-top:10px;">
+      <i class="fa-solid fa-shield-halved"></i> Account Security
+    </a>
+
+    </aside>
+
+
+    <!-- MAIN CONTENT -->
+    <section class="profile-main">
+      <div class="profile-banner">
+        <h1>{{ user.first_name }} {{ user.last_name }}</h1>
+        <p><i class="fa-solid fa-cake-candles"></i> {{ user.dob }}</p>
+      </div>
+
+      <div class="card">
+        <h3><i class="fa-solid fa-gamepad"></i> Favorite Game Genres</h3>
+
+        <div class="tags">
+          {% if user.category %}
+            {% for cat in user.category.split(',') %}
+              <span class="tag">{{ cat.title().replace('_',' ') }}</span>
+            {% endfor %}
+          {% else %}
+            <p>No selected categories</p>
+          {% endif %}
+        </div>
+      </div>
+
+      <div class="card achievements-card">
+        <h3><i class="fa-solid fa-medal"></i> Achievements</h3>
+        <p>No achievements yet — play tournaments to earn badges!</p>
+      </div>
+
+    </section>
+  </div>
+</div>
+
+
+{% include "layout/footer.html" %}
+</body>
+</html>

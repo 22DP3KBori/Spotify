@@ -1,3 +1,14 @@
+from dotenv import load_dotenv
+import os
+
+env_path = os.path.join(os.path.dirname(__file__), ".env")
+load_dotenv(env_path)
+
+print("ENV LOADED:", env_path)
+print("MAILGUN_API_KEY =", os.getenv("MAILGUN_API_KEY"))
+
+
+
 from fastapi import FastAPI, Request, Form, Depends, HTTPException
 from fastapi.responses import HTMLResponse, RedirectResponse
 from fastapi.staticfiles import StaticFiles
@@ -5,96 +16,156 @@ from fastapi.templating import Jinja2Templates
 from sqlalchemy.orm import Session
 from passlib.context import CryptContext
 
-# Импорты из проекта
-from backend.database import get_db
+from contextlib import asynccontextmanager
+from threading import Thread
+from datetime import datetime, timedelta
+import time
+
+# Project imports
+from backend.database import get_db, SessionLocal
 from backend.models import User, Tournament
 from backend.routers import profile
+from backend.routers.country_list import countries
 
-app = FastAPI()
+# ---------------------- TEMPLATES ----------------------
+from backend.core.templates import templates, current_user
+from backend.core.auth import current_user
+
+
+# ---------------------- Remove unfinished profiles after 24h ----------------------
+def delete_incomplete_users():
+    while True:
+        time.sleep(3600)
+        db = next(get_db())
+        cutoff = datetime.now() - timedelta(hours=24)
+
+        db.query(User).filter(
+            User.profile_completed == False,
+            User.created_at < cutoff
+        ).delete()
+
+        db.commit()
+
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    Thread(target=delete_incomplete_users, daemon=True).start()
+    yield
+
+# ---------------------- FastAPI App ----------------------
+app = FastAPI(lifespan=lifespan)
 
 app.include_router(profile.router)
 
+# ✅ make current_user available to ALL Jinja templates (но только после include_router!)
+templates.env.globals["current_user"] = current_user
 
-# Настройка шрифтов, папок и шаблонов
+
 app.mount("/static", StaticFiles(directory="backend/static"), name="static")
-templates = Jinja2Templates(directory="backend/templates")
 
-# Шифрование паролей
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
+WHITELIST = {
+    "/auth", "/register", "/login",
+    "/setup-profile", "/save-profile",
+    "/static", "/check-nickname",
+}
 
-# ---------------------- ГЛАВНАЯ ----------------------
+# ---------------------- Middleware ----------------------
+def path_in_whitelist(path: str) -> bool:
+    return any(path.startswith(p) for p in WHITELIST)
+
+@app.middleware("http")
+async def enforce_profile_completion(request: Request, call_next):
+    if request.url.path.startswith("/static"):
+        return await call_next(request)
+
+    user_id = request.cookies.get("user_id")
+    if not user_id:
+        return await call_next(request)
+
+    db: Session = SessionLocal()
+    try:
+        user = db.query(User).get(int(user_id))
+        if user and not user.profile_completed:
+            if not path_in_whitelist(request.url.path):
+                return RedirectResponse("/setup-profile")
+    finally:
+        db.close()
+
+    return await call_next(request)
+
+# ---------------------- Routes ----------------------
 @app.get("/", response_class=HTMLResponse)
 def index(request: Request, db: Session = Depends(get_db)):
-    user = None
-    user_id = request.cookies.get("user_id")
-    if user_id:
-        user = db.query(User).filter(User.id == user_id).first()
-
     tournaments = db.query(Tournament).filter(Tournament.is_active == True).all()
+    user = current_user(request)
+
     return templates.TemplateResponse(
         "index.html",
         {"request": request, "tournaments": tournaments, "user": user},
     )
 
-
-# ---------------------- СТРАНИЦА LOGIN / REGISTER ----------------------
 @app.get("/auth", response_class=HTMLResponse)
 def auth_page(request: Request):
     return templates.TemplateResponse("register_login.html", {"request": request})
 
-
-# ---------------------- СТРАНИЦА ЗАПОЛНЕНИЯ ПРОФИЛЯ ----------------------
 @app.get("/setup-profile", response_class=HTMLResponse)
 def setup_profile_page(request: Request):
     return templates.TemplateResponse("setup_profile.html", {"request": request})
 
-
-# ---------------------- РЕГИСТРАЦИЯ ----------------------
 @app.post("/register")
-def register(
-    request: Request,
-    email: str = Form(...),
-    password: str = Form(...),
-    db: Session = Depends(get_db),
-):
-    existing_user = db.query(User).filter(User.email == email).first()
-    if existing_user:
-        raise HTTPException(status_code=400, detail="Email already registered")
+def register(request: Request, email: str = Form(...), password: str = Form(...), db: Session = Depends(get_db)):
+    if db.query(User).filter(User.email == email).first():
+        raise HTTPException(400, "Email already registered")
 
-    hashed_password = pwd_context.hash(password)
-    new_user = User(email=email, password=hashed_password)
+    new_user = User(email=email, password=pwd_context.hash(password))
     db.add(new_user)
     db.commit()
-    db.refresh(new_user)
 
-    # ✅ создаем cookie-сессию
-    response = RedirectResponse(url="/setup-profile", status_code=303)
-    response.set_cookie(key="user_id", value=str(new_user.id))
+    response = RedirectResponse("/setup-profile", status_code=303)
+    response.set_cookie("user_id", str(new_user.id))
     return response
 
-
-# ---------------------- ЛОГИН ----------------------
 @app.post("/login")
-def login(
-    request: Request,
-    email: str = Form(...),
-    password: str = Form(...),
-    db: Session = Depends(get_db),
-):
+def login(request: Request, email: str = Form(...), password: str = Form(...), db: Session = Depends(get_db)):
     user = db.query(User).filter(User.email == email).first()
     if not user or not pwd_context.verify(password, user.password):
-        raise HTTPException(status_code=400, detail="Invalid email or password")
+        raise HTTPException(400, "Invalid email or password")
 
-    # ✅ создаем cookie-сессию
-    response = RedirectResponse(url="/", status_code=303)
-    response.set_cookie(key="user_id", value=str(user.id))
+    response = RedirectResponse("/", status_code=303)
+    response.set_cookie("user_id", str(user.id))
     return response
 
-
-# ---------------------- ВЫХОД ----------------------
 @app.get("/logout")
 def logout():
-    response = RedirectResponse(url="/", status_code=303)
+    response = RedirectResponse("/", status_code=303)
     response.delete_cookie("user_id")
     return response
+
+# ---------------------- Profile page ----------------------
+@app.get("/profile")
+def profile_page(request: Request, db: Session = Depends(get_db)):
+    user = current_user(request)
+    if not user:
+        return RedirectResponse("/auth")
+
+    return templates.TemplateResponse(
+        "profile.html",
+        {"request": request, "user": user}
+    )
+
+# ---------------------- Edit profile page ✅ ----------------------
+@app.get("/edit-profile")
+def edit_profile_page(request: Request):
+    user = current_user(request)
+    if not user:
+        return RedirectResponse("/auth")
+
+    return templates.TemplateResponse(
+        "edit_profile.html",
+        {"request": request, "user": user, "countries": countries}
+    )
+
+# ---------------------- Security routes ----------------------
+from backend.routers import security
+app.include_router(security.router)

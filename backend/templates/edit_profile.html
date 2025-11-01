@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Edit Profile</title>
+<link rel="stylesheet" href="/static/style.css">
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+<!-- Flatpickr CSS -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/themes/dark.css"> <!-- Dark theme -->
+
+<style>
+.settings-box {
+    max-width: 700px;
+    margin: 40px auto;
+    padding: 30px;
+    background: white;
+    border-radius: 14px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+}
+
+.settings-box h2 {
+    margin-bottom: 20px;
+}
+
+.form-group {
+    margin-bottom: 15px;
+}
+
+label {
+    font-weight: 600;
+    margin-bottom: 6px;
+    display: block;
+}
+
+input, select {
+    width: 100%;
+    padding: 10px;
+    border-radius: 8px;
+    border: 1px solid #ddd;
+}
+
+button.save-btn {
+    background: linear-gradient(90deg, #FF7043, #FF416C);
+    padding: 12px;
+    width: 100%;
+    color: white;
+    font-weight: 700;
+    border-radius: 8px;
+    border: none;
+    margin-top: 15px;
+    cursor: pointer;
+}
+
+.current-avatar {
+    width: 120px;
+    height: 120px;
+    border-radius: 10px;
+    object-fit: cover;
+    margin-bottom: 10px;
+}
+
+.genre-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 8px;
+}
+
+.genre-tag {
+    padding: 8px 14px;
+    border-radius: 8px;
+    background: #f2f2f2;
+    cursor: pointer;
+    transition: .2s;
+    font-size: 14px;
+    font-weight: 600;
+    border: 1px solid #ddd;
+}
+
+.genre-tag:hover {
+    background: #ffd6c9;
+    border-color: #ff7043;
+}
+
+.genre-tag.selected {
+    background: #ff7043;
+    color: white;
+    border-color: #ff7043;
+    box-shadow: 0 0 8px rgba(255,112,67,0.5);
+}
+
+.flash {
+    width: 100%;
+    padding: 14px;
+    margin-top: 10px;
+    text-align: center;
+    font-weight: 600;
+    border-radius: 8px;
+    color: white;
+    animation: fadeIn .3s ease-out;
+}
+
+.flash-success { background: #4CAF50; }
+.flash-error { background: #E53935; }
+.flash-info { background: #2196F3; }
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(-5px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* Main calendar box */
+.flatpickr-calendar {
+    background: #fff !important;
+    border-radius: 10px !important;
+    border: 1px solid rgba(255,111,64,0.4) !important;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.12) !important;
+    overflow: hidden;
+}
+
+/* Calendar header (month area) */
+.flatpickr-months .flatpickr-month {
+    background: linear-gradient(90deg, #FF7043, #FF416C) !important;
+    color: white !important;
+    border-radius: 0 !important;
+}
+
+/* Month nav arrows */
+.flatpickr-prev-month svg,
+.flatpickr-next-month svg {
+    fill: white !important;
+    width: 14px;
+    height: 14px;
+    transition: 0.15s;
+}
+.flatpickr-prev-month:hover svg,
+.flatpickr-next-month:hover svg {
+    transform: scale(1.2);
+    fill: #FFE4D8 !important;
+}
+
+/* Weekday labels (Mon-Fri) */
+span.flatpickr-weekday {
+    color: #FF7043 !important;
+    font-weight: 600;
+    font-size: 12px;
+}
+
+/* Days grid */
+.flatpickr-day {
+    color: #222 !important;
+    background: #fff !important;
+    border-radius: 8px !important;
+}
+
+/* Hover state */
+.flatpickr-day:hover {
+    background: rgba(255,111,64,0.25) !important;
+    color: #000 !important;
+}
+
+/* Today */
+.flatpickr-day.today {
+    border: 1px solid #FF7043 !important;
+    color: #FF7043 !important;
+    font-weight: 600;
+}
+
+/* Selected date (active day) */
+.flatpickr-day.selected {
+    background: linear-gradient(90deg, #FF7043, #FF416C) !important;
+    color: white !important;
+    border: 0 !important;
+}
+
+/* Disabled dates */
+.flatpickr-day.disabled {
+    color: #aaa !important;
+    cursor: not-allowed;
+}
+
+
+
+</style>
+</head>
+
+<body>
+
+{% include "layout/navbar.html" %}
+
+
+<div class="settings-box">
+    <h2><i class="fa-solid fa-user-gear"></i> Edit Profile</h2>
+
+    <form action="/edit-profile" method="post" enctype="multipart/form-data">
+
+        <label>Current Avatar</label>
+        <img src="{{ user.avatar or '/static/img/default-avatar.png' }}" class="current-avatar">
+
+        <div class="form-group">
+            <label>Upload New Avatar</label>
+            <input type="file" name="avatar" accept="image/*">
+        </div>
+
+        <div class="form-group">
+            <label>First Name</label>
+            <input name="first_name" value="{{ user.first_name }}" required>
+        </div>
+
+        <div class="form-group">
+            <label>Last Name</label>
+            <input name="last_name" value="{{ user.last_name }}" required>
+        </div>
+
+        <div class="form-group">
+            <label>Nickname</label>
+            <input name="nickname" value="{{ user.nickname }}" required>
+        </div>
+
+        <div class="form-group">
+            <label>Country</label>
+            <select name="country" required>
+                {% for c in countries %}
+                  <option value="{{ c.name }}" {% if user.country == c.name %} selected {% endif %}>{{ c.flag }} {{ c.name }}</option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label>Date of Birth</label>
+            <input id="dob" name="dob" type="text" value="{{ user.dob }}" placeholder="Select date">
+        </div>
+
+
+        <div class="form-group">
+            <label>Favorite Game Genres</label>
+
+            <div class="genre-tags">
+                {% for cat in ["fps","moba","sports","strategy","fighting","racing","battle_royale","card","simulation","arcade"] %}
+                    <div 
+                    class="genre-tag {% if user.category and cat in user.category %}selected{% endif %}" 
+                    data-value="{{ cat }}"
+                    >
+                    {{ cat.title().replace('_',' ') }}
+                    </div>
+                {% endfor %}
+            </div>
+
+            <input type="hidden" name="category" id="genre-input" value="{{ user.category }}">
+        </div>
+
+        <button class="save-btn">Save Changes</button>
+    </form>
+</div>
+
+{% include "layout/footer.html" %}
+
+<script>
+const genreTags = document.querySelectorAll('.genre-tag');
+const genreInput = document.getElementById('genre-input');
+
+genreTags.forEach(tag => {
+    tag.addEventListener('click', () => {
+        tag.classList.toggle('selected');
+
+        const selected = [...document.querySelectorAll('.genre-tag.selected')]
+            .map(t => t.dataset.value);
+
+        genreInput.value = selected.join(",");
+    });
+});
+</script>
+
+<!-- Flatpickr JS -->
+<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+
+<script>
+flatpickr("#dob", {
+    dateFormat: "Y-m-d",
+    maxDate: "today", 
+    minDate: "1925-01-01",
+    allowInput: false,
+    theme: "dark",
+    altInput: true,
+    altFormat: "F j, Y",
+    yearRange: [1925, new Date().getFullYear()],
+});
+</script>
+
+</body>
+</html>

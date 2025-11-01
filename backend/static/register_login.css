@@ -227,7 +227,7 @@ input {
 }
 
 footer {
-    background-color: #222;
+    background: linear-gradient(90deg, #FF7043, #FF416C);
     color: #fff;
     font-size: 14px;
     bottom: 0;

@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>Account Security</title>
+<link rel="stylesheet" href="/static/style.css">
+
+<style>
+.security-container {
+    max-width: 700px;
+    margin: 40px auto;
+    padding: 10px;
+}
+
+.page-title {
+    font-size: 28px;
+    font-weight: 700;
+    margin-bottom: 25px;
+}
+
+.security-card {
+    background: #fff;
+    padding: 25px;
+    border-radius: 14px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+    margin-bottom: 25px;
+}
+
+.security-card h3 {
+    margin-bottom: 15px;
+}
+
+.security-form label {
+    font-weight: 600;
+    display: block;
+    margin-top: 10px;
+}
+
+.security-form input {
+    width: 100%;
+    padding: 12px;
+    margin-top: 5px;
+    border-radius: 8px;
+    border: 1px solid #ddd;
+    font-size: 15px;
+}
+
+.btn-primary {
+    width: 100%;
+    margin-top: 15px;
+    padding: 12px;
+    background: linear-gradient(90deg, #FF7043, #FF416C);
+    border: none;
+    border-radius: 8px;
+    color: white;
+    font-weight: 700;
+    cursor: pointer;
+    transition: .2s;
+}
+
+.btn-primary:hover {
+    opacity: .85;
+}
+
+/* ✅ Alerts */
+.alert {
+    padding: 12px;
+    border-radius: 8px;
+    margin-bottom: 15px;
+    font-weight: 600;
+}
+
+.alert.success {
+    background: #e8ffe8;
+    border: 1px solid #4CAF50;
+    color: #2e7d32;
+}
+
+.alert.error {
+    background: #ffecec;
+    border: 1px solid #ff5252;
+    color: #b71c1c;
+}
+</style>
+</head>
+
+<body>
+{% include "layout/navbar.html" %}
+
+<div class="security-container">
+
+    <h2 class="page-title">🔐 Account Security</h2>
+
+    {% if success_message %}
+        <div class="alert success">{{ success_message }}</div>
+    {% endif %}
+
+    {% if error_message %}
+        <div class="alert error">{{ error_message }}</div>
+    {% endif %}
+
+    <!-- CHANGE EMAIL -->
+    <div class="security-card">
+        <h3>📧 Change Email</h3>
+
+        <form action="/change-email" method="post" class="security-form">
+            <label>New Email</label>
+            <input type="email" name="new_email" placeholder="Enter new email" required>
+
+            <label>Current Password</label>
+            <input type="password" name="current_password" placeholder="Enter your password" required>
+
+            <button class="btn-primary">Update Email</button>
+        </form>
+    </div>
+
+    <!-- CHANGE PASSWORD -->
+    <div class="security-card">
+        <h3>🔑 Change Password</h3>
+
+        <form action="/change-password" method="post" class="security-form">
+            <label>Current Password</label>
+            <input type="password" name="current_password" placeholder="Current password" required>
+
+            <label>New Password</label>
+            <input type="password" name="new_password" placeholder="New password" required>
+
+            <label>Confirm New Password</label>
+            <input type="password" name="confirm_password" placeholder="Confirm new password" required>
+
+            <button class="btn-primary">Update Password</button>
+        </form>
+    </div>
+
+</div>
+
+{% include "layout/footer.html" %}
+</body>
+</html>

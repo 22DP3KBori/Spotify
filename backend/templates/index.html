@@ -7,26 +7,9 @@
   <link rel="stylesheet" href="/static/style.css?v=2" />
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
 </head>
-
 <body>
   <!-- HEADER -->
-  <header class="navbar">
-    <div class="logo"><i class="fa-solid fa-trophy"></i> Tournament Platform</div>
-    <nav>
-      <a href="/">Home</a>
-      <a href="#tournaments">Tournaments</a>
-      <a href="#teams">Teams</a>
-      <a href="#contact">Contact</a>
-
-      {% if user %}
-        <a href="/logout" class="btn small ghost">
-          Logout ({{ user.nickname or user.email }})
-        </a>
-      {% else %}
-        <a href="/auth" class="btn small ghost">Login</a>
-      {% endif %}
-    </nav>
-  </header>
+  {% include "layout/navbar.html" %}
 
   <!-- HERO -->
   <section class="hero">
@@ -100,8 +83,6 @@
   </section>
 
   <!-- FOOTER -->
-  <footer>
-    <p>© 2025 Tournament Platform — All rights reserved.</p>
-  </footer>
+    {% include "layout/footer.html" %}
 </body>
 </html>

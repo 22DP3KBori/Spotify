@@ -1,18 +1,19 @@
 from logging.config import fileConfig
 from sqlalchemy import engine_from_config, pool
 from alembic import context
-import sys
 import os
+import sys
 
-# Добавляем путь к backend
-sys.path.append(os.path.join(os.path.dirname(__file__), '..'))
+# Добавляем корень проекта в PYTHONPATH
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..')))
 
-from database import Base  # наш Base из database.py
-import models  # чтобы Alembic видел все таблицы
+from backend.database import Base  # ✅ Правильный Base
+import backend.models  # ✅ Импортируем, чтобы Alembic видел ВСЕ модели
 
-# Конфигурация Alembic
+# Alembic config
 config = context.config
 fileConfig(config.config_file_name)
+
 target_metadata = Base.metadata
 
 
@@ -24,7 +25,6 @@ def run_migrations_offline():
         literal_binds=True,
         dialect_opts={"paramstyle": "named"},
     )
-
     with context.begin_transaction():
         context.run_migrations()
 

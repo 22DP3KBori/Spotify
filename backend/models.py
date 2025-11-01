@@ -9,7 +9,7 @@ from sqlalchemy import (
     Table,
 )
 from sqlalchemy.orm import relationship
-from datetime import datetime
+from datetime import datetime, timedelta
 from backend.database import Base
 
 # -----------------------------------------------------
@@ -52,6 +52,7 @@ class User(Base):
     category = Column(String(50))
     avatar = Column(String(255))
     is_active = Column(Boolean, default=True)
+    profile_completed = Column(Boolean, nullable=False, default=False)
 
     # 🔹 связь с ролью
     role_id = Column(Integer, ForeignKey("roles.id"))
@@ -131,6 +132,7 @@ class Match(Base):
     team2 = relationship("Team", foreign_keys=[team2_id], back_populates="matches_as_team2")
 
 
+
 # -----------------------------------------------------
 # Комментарии
 # -----------------------------------------------------
@@ -145,3 +147,13 @@ class Comment(Base):
 
     user = relationship("User", back_populates="comments")
     tournament = relationship("Tournament", back_populates="comments")
+
+
+class EmailVerificationCode(Base):
+    __tablename__ = "email_verification_codes"
+
+    id = Column(Integer, primary_key=True, index=True)
+    user_id = Column(Integer, ForeignKey("users.id"))
+    code = Column(String(6))
+    email = Column(String(255))
+    expires_at = Column(DateTime)
