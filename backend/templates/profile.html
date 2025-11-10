@@ -212,6 +212,148 @@
 .edit-btn:hover {
     opacity: .85;
 }
+
+.coins {
+  font-size: 15px;
+  font-weight: 600;
+  margin-bottom: 15px;
+  color: #EAB308; /* gold */
+}
+
+.avatar-wrapper {
+  position: relative;
+  display: inline-block;
+  width: 120px;
+  height: 120px;
+}
+
+/* Аватарка базовая */
+.avatar {
+  position: absolute;
+  border-radius: 12px;
+  object-fit: cover;
+  z-index: 1;
+  top: var(--top, 0);
+  left: var(--left, 0);
+  width: var(--size, 120px);
+  height: var(--size, 120px);
+}
+
+/* Рамка поверх */
+.avatar-frame {
+  position: absolute;
+  top: -2px;
+  left: -2px;
+  width: 130px;
+  height: 130px;
+  pointer-events: none;
+  z-index: 2;
+}
+
+.avatar-wrapper.fire .avatar-frame {
+  width: 135px;
+  height: 150px;
+  top: -20px;
+  left: -5px;
+}
+
+/* ❄️ Ice frame — лед немного выступает */
+.avatar-wrapper.ice .avatar-frame {
+  width: 130px;
+  height: 135px;
+  top: -10px;
+  left: -5px;
+}
+
+/* Настройки под конкретные рамки */
+.avatar-wrapper.gold { --size: 120px; --top: 5px; --left: 1px;}
+.avatar-wrapper.silver { --size: 120px; --top: 5px; --left: 0px;}
+.avatar-wrapper.bronze { --size: 120px; --top: 5px; --left: 1px;}
+.avatar-wrapper.neon { --size: 120px; --top: 5px; --left: 3px;}
+
+/* 🔥 Fire frame */
+.avatar-wrapper.fire { --size: 112px; --top: 10px; --left: 9px; }
+
+/* ❄️ Ice frame */
+.avatar-wrapper.ice { --size: 108px; --top: 8px; --left: 8px; }
+
+
+/* Кнопка-карандаш */
+.avatar-edit {
+  position: absolute;
+  right: 95px;
+  bottom: -20px;
+  width: 36px;
+  height: 36px;
+  border-radius: 999px;
+  background: #FF7043;
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 2px solid #fff;
+  box-shadow: 0 6px 16px rgba(0,0,0,0.15);
+  z-index: 3;
+  transition: transform .15s ease, opacity .15s ease;
+  text-decoration: none;
+}
+.avatar-edit:hover { transform: scale(1.05); opacity: 1; }
+.avatar-edit i { font-size: 14px; }
+
+.rank-box {
+  background: linear-gradient(180deg, #fff, #f9f9f9);
+  border: 1px solid #eee;
+  border-radius: 12px;
+  padding: 16px;
+  text-align: center;
+  box-shadow: 0 3px 10px rgba(0,0,0,0.05);
+}
+
+.rank-title {
+  font-size: 14px;
+  opacity: 0.7;
+  font-weight: 600;
+}
+
+.rank-value {
+  font-size: 18px;
+  font-weight: 700;
+  color: #FF7043;
+  margin: 6px 0 10px;
+}
+
+.rank-value i {
+  color: #FFB800;
+  margin-right: 6px;
+}
+
+.rank-progress {
+  position: relative;
+  height: 12px;
+  background: #eee;
+  border-radius: 8px;
+  overflow: hidden;
+  margin: 6px 0;
+}
+
+.rank-fill {
+  height: 100%;
+  border-radius: 8px;
+  background: linear-gradient(90deg, #FF7043, #FF416C);
+  transition: width 0.5s ease-out;
+}
+
+.rank-box small {
+  font-size: 13px;
+  color: #666;
+}
+
+.rank-box.bronze .rank-fill { background: linear-gradient(90deg, #CD7F32, #b26b2d); }
+.rank-box.silver .rank-fill { background: linear-gradient(90deg, #C0C0C0, #a0a0a0); }
+.rank-box.gold .rank-fill { background: linear-gradient(90deg, #FFD700, #FFB400); }
+.rank-box.platinum .rank-fill { background: linear-gradient(90deg, #5CE1E6, #00C6FF); }
+.rank-box.diamond .rank-fill { background: linear-gradient(90deg, #A66CFF, #7F00FF); }
+
 </style>
 </head>
 
@@ -226,23 +368,75 @@
     <!-- LEFT SIDEBAR -->
     <!-- LEFT SIDEBAR -->
     <aside class="profile-side">
-    <img src="{{ user.avatar or '/static/img/default-avatar.png' }}" class="profile-photo">
+      {% set equipped = user.frames | selectattr("equipped", "equalto", True) | list %}
+      {% if equipped %}
+        {% set frame_class = equipped[0].frame.name|lower %}
+      {% else %}
+        {% set frame_class = '' %}
+      {% endif %}
+
+      <div class="avatar-wrapper {{ frame_class }}">
+        <img src="{{ user.avatar }}" class="avatar">
+
+        {% if equipped and equipped[0].frame.image_url %}
+          <img src="{{ equipped[0].frame.image_url }}" class="avatar-frame" alt="Frame">
+        {% endif %}
+
+        <!-- Кнопка-карандаш -->
+        <a class="avatar-edit" href="/profile/customize" title="Customize avatar">
+          <i class="fa-solid fa-pen"></i>
+        </a>
+      </div>
+
+
+
+    
 
     <h2>{{ user.nickname }}</h2>
-    <p class="country">
-        <i class="fa-solid fa-flag"></i> {{ user.country }}
+    <p class="coins">
+      <i class="fa-solid fa-coins" style="color: gold;"></i>
+      {{ user.coins }} coins
     </p>
 
-    <div class="rank-box">
-        <p class="rank-title">Current Rank</p>
-        <p class="rank-value">
-        <i class="fa-solid fa-trophy"></i> Bronze Player
-        </p>
-        <div class="rank-progress">
-        <div class="rank-fill" style="width: 30%"></div>
-        </div>
-        <small>XP: 320 / 1000</small>
+    <p class="country">
+      {{ user.country|flag }} {{ user.country }}
+    </p>
+
+
+    {% set level = user.level or 1 %}
+    {% set xp = user.xp or 0 %}
+
+    <div class="rank-box {{ 
+        'bronze' if level < 10 else 
+        'silver' if level < 20 else 
+        'gold' if level < 30 else 
+        'platinum' if level < 40 else 
+        'diamond' }}">
+      <p class="rank-title">Current Rank</p>
+      <p class="rank-value">
+        <i class="fa-solid fa-trophy"></i>
+        {% if level < 10 %}
+          Bronze Player
+        {% elif level < 20 %}
+          Silver Player
+        {% elif level < 30 %}
+          Gold Player
+        {% elif level < 40 %}
+          Platinum Player
+        {% else %}
+          Diamond Player
+        {% endif %}
+      </p>
+      <div class="rank-progress">
+        {% set progress = (xp / (100 * level)) * 100 %}
+        <div class="rank-fill" style="width: {{ progress }}%"></div>
+        <small>XP: {{ xp }} / {{ 100 * level }} (Lvl {{ level }})</small>
+      </div>
+      {% set level = user.level or 1 %}
+      {% set xp = user.xp or 0 %}
+      <small>XP: {{ xp }} / {{ 100 * level }} (Lvl {{ level }})</small>
     </div>
+
 
     <a href="/edit-profile" class="edit-btn full">
         <i class="fa-solid fa-pen"></i> Edit Profile

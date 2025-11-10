@@ -1,0 +1,55 @@
+{% include "layout/navbar.html" %}
+<link rel="stylesheet" href="/static/style.css">
+<link rel="stylesheet" href="/static/store.css?v=2
+">
+
+<div class="store-wrapper">
+
+  <div class="store-header">
+    <h1>🛍 Customization Store</h1>
+    <div class="user-coins">
+        <i class="fa-solid fa-coins"></i>
+        <span class="label">Balance:</span>
+        <span class="amount">{{ user.coins }}</span>
+    </div>
+
+  </div>
+
+  <div class="store-tabs">
+    <button class="tab-btn active" data-tab="frames">🖼 Frames</button>
+    <button class="tab-btn" data-tab="themes">🎨 Themes</button>
+    <button class="tab-btn" data-tab="other">✨ Other</button>
+  </div>
+
+  <div id="tab-frames" class="tab-content active">
+    <div class="store-grid">
+        {% for frame in frames %}
+        <div class="store-item">
+            <div class="frame-preview">
+            <img src="{{ frame.image_url }}" alt="{{ frame.name }}">
+            </div>
+
+            <h3>{{ frame.name }}</h3>
+            <p class="price">
+            <i class="fa-solid fa-coins" style="color: gold;"></i> {{ frame.price }}
+            </p>
+
+            {% if frame.id in owned_frames %}
+            <button class="owned-btn" disabled>Already owned ✅</button>
+            {% else %}
+            <button class="buy-btn" onclick="buyFrame({{ frame.id }})">
+                Buy
+            </button>
+            {% endif %}
+        </div>
+        {% endfor %}
+    </div>
+  </div>
+
+
+  <div id="tab-themes" class="tab-content"><h2>🎨 Coming soon...</h2></div>
+  <div id="tab-other" class="tab-content"><h2>✨ Coming soon...</h2></div>
+</div>
+
+<script src="/static/store.js"></script>
+{% include "layout/footer.html" %}

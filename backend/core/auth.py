@@ -2,6 +2,7 @@
 from backend.database import SessionLocal
 from backend.models import User
 from fastapi import Request
+from sqlalchemy.orm import joinedload
 
 def current_user(request: Request):
     user_id = request.cookies.get("user_id")
@@ -9,6 +10,6 @@ def current_user(request: Request):
         return None
 
     db = SessionLocal()
-    user = db.query(User).filter(User.id == user_id).first()
+    user = db.query(User).options(joinedload(User.frames)).filter(User.id == user_id).first()
     db.close()
     return user

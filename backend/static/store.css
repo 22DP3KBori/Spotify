@@ -1,0 +1,191 @@
+.store-wrapper {
+  max-width: 1000px;
+  margin: 40px auto;
+  background: rgba(255,255,255,0.85);
+  backdrop-filter: blur(6px);
+  border-radius: 16px;
+  padding: 30px;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.08);
+}
+
+.store-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 25px;
+}
+
+.store-header h1 {
+  font-size: 28px;
+  font-weight: 700;
+  color: #333;
+}
+
+.user-coins {
+  font-size: 18px;
+  font-weight: 700;
+  color: #EAB308;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.store-tabs {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 25px;
+  gap: 10px;
+}
+
+.tab-btn {
+  background: #f3f4f6;
+  border: none;
+  border-radius: 10px;
+  padding: 10px 20px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: 0.2s;
+}
+
+.tab-btn.active {
+  background: linear-gradient(90deg, #FF7043, #FF416C);
+  color: white;
+  box-shadow: 0 3px 10px rgba(255, 64, 108, 0.3);
+}
+
+.tab-content {
+  display: none;
+}
+
+.tab-content.active {
+  display: block;
+}
+
+.store-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: 20px;
+}
+
+.store-item {
+  background: white;
+  border-radius: 14px;
+  padding: 15px;
+  text-align: center;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.store-item:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 6px 16px rgba(0,0,0,0.1);
+}
+
+.frame-preview img {
+  width: 100%;
+  height: 140px;
+  object-fit: contain;
+}
+
+.store-item h3 {
+  margin: 10px 0 5px;
+  font-weight: 600;
+  font-size: 16px;
+}
+
+.price {
+  font-size: 14px;
+  color: #EAB308;
+  margin-bottom: 10px;
+}
+
+.store-item {
+  background: white;
+  border-radius: 12px;
+  padding: 15px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+  text-align: center;
+  width: 180px;
+  transition: transform .2s ease;
+}
+.store-item:hover {
+  transform: translateY(-3px);
+}
+
+.frame-preview img {
+  width: 100%;
+  border-radius: 10px;
+  margin-bottom: 10px;
+}
+
+.buy-btn, .owned-btn {
+  padding: 8px 14px;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  border: none;
+  transition: 0.2s;
+}
+
+.buy-btn {
+  background: linear-gradient(90deg, #FF7043, #FF416C);
+  color: white;
+}
+
+.buy-btn:hover {
+  opacity: 0.9;
+  transform: translateY(-1px);
+}
+
+.owned-btn {
+  background: #e0e0e0;
+  color: #555;
+  cursor: default;
+}
+
+
+
+.user-coins {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  background: linear-gradient(135deg, #FFF7E6 0%, #FFE082 100%);
+  border: 2px solid #FFD700;
+  box-shadow: 0 0 12px rgba(255, 215, 0, 0.4), inset 0 0 8px rgba(255, 255, 255, 0.5);
+  border-radius: 14px;
+  padding: 8px 18px;
+  font-size: 17px;
+  font-weight: 700;
+  color: #7A5C00;
+  letter-spacing: 0.3px;
+  position: relative;
+  transition: all 0.25s ease-in-out;
+}
+
+.user-coins:hover {
+  transform: scale(1.03);
+  box-shadow: 0 0 18px rgba(255, 215, 0, 0.6), inset 0 0 8px rgba(255, 255, 255, 0.6);
+}
+
+.user-coins i {
+  color: #FFD700;
+  font-size: 20px;
+  filter: drop-shadow(0 0 3px rgba(255, 215, 0, 0.8));
+}
+
+.user-coins .label {
+  font-size: 15px;
+  font-weight: 600;
+  opacity: 0.8;
+}
+
+.user-coins .amount {
+  background: linear-gradient(90deg, #FFD700, #FFC107);
+  color: #FFC107; /* fallback для браузеров без background-clip:text */
+  background-clip: text; /* стандартное свойство */
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  text-shadow: 0 0 5px rgba(255, 215, 0, 0.6);
+  font-weight: 800;
+  font-size: 18px;
+}

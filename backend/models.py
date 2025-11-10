@@ -53,10 +53,16 @@ class User(Base):
     avatar = Column(String(255))
     is_active = Column(Boolean, default=True)
     profile_completed = Column(Boolean, nullable=False, default=False)
+    coins = Column(Integer, default=0)
+    created_at = Column(DateTime, default=datetime.utcnow)
+    xp = Column(Integer, default=0)
+    level = Column(Integer, default=1)
+
 
     # 🔹 связь с ролью
     role_id = Column(Integer, ForeignKey("roles.id"))
     role = relationship("Role", back_populates="users")
+    achievements = relationship("UserAchievement", back_populates="user", cascade="all, delete-orphan")
 
     # 🔹 обратные связи
     teams = relationship("Team", back_populates="creator")
@@ -157,3 +163,79 @@ class EmailVerificationCode(Base):
     code = Column(String(6))
     email = Column(String(255))
     expires_at = Column(DateTime)
+
+
+# -----------------------------------------------------
+# Темы профиля и инвентарь пользователей
+# -----------------------------------------------------
+class ProfileTheme(Base):
+    __tablename__ = "profile_themes"
+    id = Column(Integer, primary_key=True)
+    name = Column(String(50))
+    type = Column(String(20))
+    price = Column(Integer)
+    rarity = Column(String(20))
+    preview_image = Column(String(255))
+    css_class = Column(String(255))
+
+
+class UserInventory(Base):
+    __tablename__ = "user_inventory"
+    id = Column(Integer, primary_key=True)
+    user_id = Column(Integer, ForeignKey("users.id"))
+    theme_id = Column(Integer, ForeignKey("profile_themes.id"))
+
+
+# -----------------------------------------------------
+# Рамки профиля и инвентарь
+# -----------------------------------------------------
+
+class ProfileFrame(Base):
+    __tablename__ = "profile_frames"
+
+    id = Column(Integer, primary_key=True, index=True)
+    name = Column(String(100), nullable=False)
+    image_url = Column(String(255), nullable=False)  # PNG overlay
+    price = Column(Integer, nullable=False, default=0)
+
+    # Например:
+    # name = "Gold Frame"
+    # image_url = "/static/frames/gold.png"
+    # price = 500
+
+
+class UserFrame(Base):
+    __tablename__ = "user_frames"   
+
+    id = Column(Integer, primary_key=True, index=True)
+    user_id = Column(Integer, ForeignKey("users.id"))
+    frame_id = Column(Integer, ForeignKey("profile_frames.id"))
+    equipped = Column(Boolean, default=False)
+
+    user = relationship("User", backref="frames")
+    frame = relationship("ProfileFrame")
+
+class Achievement(Base):
+    __tablename__ = "achievements"
+
+    id = Column(Integer, primary_key=True)
+    name = Column(String(100), nullable=False)
+    description = Column(Text)
+    icon_url = Column(String(255))
+    xp_reward = Column(Integer, default=50)
+
+    def __repr__(self):
+        return f"<Achievement(name={self.name})>"
+
+
+# 🔹 Связь пользователь–ачивка
+class UserAchievement(Base):
+    __tablename__ = "user_achievements"
+
+    id = Column(Integer, primary_key=True)
+    user_id = Column(Integer, ForeignKey("users.id"))
+    achievement_id = Column(Integer, ForeignKey("achievements.id"))
+    earned_at = Column(DateTime, default=datetime.utcnow)
+
+    user = relationship("User", back_populates="achievements")
+    achievement = relationship("Achievement")

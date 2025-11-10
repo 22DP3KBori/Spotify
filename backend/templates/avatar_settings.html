@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Avatar Settings — {{ user.nickname }}</title>
+<link rel="stylesheet" href="/static/style.css">
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+<style>
+.page-wrapper {
+  max-width: 900px;
+  margin: 50px auto;
+  background: white;
+  border-radius: 14px;
+  box-shadow: 0 4px 25px rgba(0,0,0,0.07);
+  padding: 25px;
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 25px;
+}
+
+.header h2 {
+  font-size: 24px;
+  font-weight: 700;
+}
+
+.back-btn {
+  background: #f1f1f1;
+  border: none;
+  border-radius: 8px;
+  padding: 8px 14px;
+  cursor: pointer;
+  font-weight: 600;
+}
+
+.avatar-preview {
+  text-align: center;
+  margin-bottom: 10px;
+  position: relative;
+}
+
+.avatar-preview img {
+  width: 140px;
+  height: 140px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 3px solid #FF7043;
+  transition: transform .2s ease;
+}
+
+.avatar-preview img.changed {
+  transform: scale(1.05);
+  box-shadow: 0 0 10px rgba(255,112,67,0.6);
+}
+
+/* ✏️ иконка редактирования */
+.edit-icon {
+  position: absolute;
+  right: calc(50% - 70px);
+  bottom: 10px;
+  background: #FF7043;
+  color: white;
+  border-radius: 50%;
+  right: 460px;
+  width: 34px;
+  height: 34px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+  transition: .2s;
+}
+.edit-icon:hover { transform: scale(1.05); }
+
+/* 💾 кнопка сохранения */
+.save-avatar {
+  background: linear-gradient(90deg, #FF7043, #FF416C);
+  color: white;
+  padding: 10px 18px;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  display: block;
+  text-align: center;
+  width: 170px;
+  margin: 15px auto;
+  transition: .2s;
+}
+.save-avatar:hover { opacity: .9; transform: translateY(-1px); }
+.hidden { display: none; }
+
+/* Табы */
+.tabs {
+  display: flex;
+  gap: 15px;
+  border-bottom: 2px solid #eee;
+  margin: 25px 0;
+}
+
+.tab {
+  padding: 10px 20px;
+  border-radius: 8px 8px 0 0;
+  cursor: pointer;
+  font-weight: 600;
+  transition: .2s;
+}
+
+.tab.active {
+  background: linear-gradient(90deg, #FF7043, #FF416C);
+  color: white;
+}
+
+.tab-content { display: none; }
+.tab-content.active { display: block; }
+
+/* Рамки */
+.frames-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: 20px;
+}
+
+.frame-card {
+  background: #fafafa;
+  border-radius: 10px;
+  padding: 15px;
+  text-align: center;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+  transition: .2s;
+  border: 2px solid transparent;
+}
+.frame-card img {
+  width: 100px;
+  height: 100px;
+  object-fit: contain;
+  margin-bottom: 8px;
+}
+
+.frame-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 10px rgba(0,0,0,0.08);
+}
+
+.frame-card.equipped {
+  border-color: #FF7043;
+}
+
+.frame-name {
+  font-weight: 600;
+  margin-bottom: 5px;
+}
+
+.equip-btn, .unequip-btn {
+  border: none;
+  border-radius: 6px;
+  padding: 6px 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: .2s;
+  font-size: 13px;
+}
+
+.equip-btn {
+  background: linear-gradient(90deg, #FF7043, #FF416C);
+  color: white;
+}
+.equip-btn:hover { opacity: .9; }
+
+.unequip-btn {
+  background: #e5e5e5;
+  color: #333;
+}
+.unequip-btn:hover { background: #dcdcdc; }
+
+.no-frames {
+  font-style: italic;
+  color: #777;
+  text-align: center;
+  grid-column: 1 / -1;
+}
+
+</style>
+</head>
+
+<body>
+{% include "layout/navbar.html" %}
+
+<div class="page-wrapper">
+  <div class="header">
+    <h2>Avatar Settings</h2>
+    <button class="back-btn" onclick="location.href='/profile'">← Back to Profile</button>
+  </div>
+
+  <!-- Аватар -->
+  <div class="avatar-preview">
+    <img src="{{ user.avatar }}" id="avatar-img">
+    <div class="edit-icon" onclick="document.getElementById('avatar-upload').click()">
+      <i class="fa-solid fa-pen"></i>
+    </div>
+
+    <form id="avatar-form" enctype="multipart/form-data" style="display:none;">
+      <input type="file" id="avatar-upload" name="avatar" accept="image/*" onchange="previewAvatar()">
+    </form>
+  </div>
+
+  <div id="save-avatar-btn" class="save-avatar hidden" onclick="uploadAvatar()">
+    <i class="fa-solid fa-cloud-arrow-up"></i> Save avatar
+  </div>
+
+  <!-- Табы -->
+  <div class="tabs">
+    <div class="tab active" data-tab="frames">Frames</div>
+    <div class="tab" data-tab="themes">Themes</div>
+  </div>
+
+  <!-- TAB: Frames -->
+  <div class="tab-content active" id="frames">
+    <div class="frames-grid">
+      {% if user.frames %}
+        {% for f in user.frames %}
+          <div class="frame-card {% if f.equipped %}equipped{% endif %}">
+            <img src="{{ f.frame.image_url }}" alt="{{ f.frame.name }}">
+            <p class="frame-name">{{ f.frame.name }}</p>
+            {% if f.equipped %}
+              <button class="unequip-btn" onclick="unequipFrame({{ f.frame.id }})">Equipped ✓</button>
+            {% else %}
+              <button class="equip-btn" onclick="equipFrame({{ f.frame.id }})">Equip</button>
+            {% endif %}
+          </div>
+        {% endfor %}
+      {% else %}
+        <p class="no-frames">You don’t have any frames yet. Visit the <a href="/store">Store</a>.</p>
+      {% endif %}
+    </div>
+  </div>
+
+  <!-- TAB: Themes -->
+  <div class="tab-content" id="themes">
+    <p>🎨 Theme customization coming soon...</p>
+  </div>
+</div>
+
+<script>
+/* переключение вкладок */
+document.querySelectorAll('.tab').forEach(tab => {
+  tab.addEventListener('click', () => {
+    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+    document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+    tab.classList.add('active');
+    document.getElementById(tab.dataset.tab).classList.add('active');
+  });
+});
+
+/* аватарка — предпросмотр */
+function previewAvatar() {
+  const file = document.getElementById('avatar-upload').files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = e => {
+    const img = document.getElementById('avatar-img');
+    img.src = e.target.result;
+    img.classList.add('changed');
+    document.getElementById('save-avatar-btn').classList.remove('hidden');
+  };
+  reader.readAsDataURL(file);
+}
+
+/* загрузка аватарки */
+async function uploadAvatar() {
+  const file = document.getElementById('avatar-upload').files[0];
+  if (!file) return alert("No file selected");
+  const formData = new FormData();
+  formData.append("avatar", file);
+
+  const res = await fetch('/profile/upload-avatar', { method: 'POST', body: formData });
+  if (res.ok) { alert("✅ Avatar updated!"); location.reload(); }
+  else alert("❌ Upload failed");
+}
+
+/* надеть рамку */
+async function equipFrame(id) {
+  const res = await fetch(`/frames/equip/${id}`, { method: 'POST' });
+  if (res.ok) location.reload();
+  else alert('Failed to equip frame');
+}
+
+/* снять рамку */
+async function unequipFrame(id) {
+  const res = await fetch(`/frames/unequip/${id}`, { method: 'POST' });
+  if (res.ok) location.reload();
+  else alert('Failed to unequip frame');
+}
+</script>
+
+{% include "layout/footer.html" %}
+</body>
+</html>

@@ -195,14 +195,6 @@ span.flatpickr-weekday {
 
     <form action="/edit-profile" method="post" enctype="multipart/form-data">
 
-        <label>Current Avatar</label>
-        <img src="{{ user.avatar or '/static/img/default-avatar.png' }}" class="current-avatar">
-
-        <div class="form-group">
-            <label>Upload New Avatar</label>
-            <input type="file" name="avatar" accept="image/*">
-        </div>
-
         <div class="form-group">
             <label>First Name</label>
             <input name="first_name" value="{{ user.first_name }}" required>

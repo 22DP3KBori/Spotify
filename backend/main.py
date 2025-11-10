@@ -1,5 +1,6 @@
 from dotenv import load_dotenv
 import os
+from starlette.middleware.sessions import SessionMiddleware
 
 env_path = os.path.join(os.path.dirname(__file__), ".env")
 load_dotenv(env_path)
@@ -23,7 +24,7 @@ import time
 
 # Project imports
 from backend.database import get_db, SessionLocal
-from backend.models import User, Tournament
+from backend.models import User, Tournament, UserFrame
 from backend.routers import profile
 from backend.routers.country_list import countries
 
@@ -31,6 +32,14 @@ from backend.routers.country_list import countries
 from backend.core.templates import templates, current_user
 from backend.core.auth import current_user
 
+# ---------------------- JINJA FILTERS ----------------------
+def get_flag(country_name: str):
+    for c in countries:
+        if c["name"] == country_name:
+            return c["flag"]
+    return ""
+    
+templates.env.filters["flag"] = get_flag
 
 # ---------------------- Remove unfinished profiles after 24h ----------------------
 def delete_incomplete_users():
@@ -53,6 +62,13 @@ async def lifespan(app: FastAPI):
 
 # ---------------------- FastAPI App ----------------------
 app = FastAPI(lifespan=lifespan)
+
+app.add_middleware(
+    SessionMiddleware,
+    secret_key=os.getenv("SESSION_SECRET_KEY", "supersecretkey123"),  # замени на свой ключ
+    same_site="lax",
+    max_age=86400 * 7,  # 7 дней
+)
 
 app.include_router(profile.router)
 
@@ -85,8 +101,10 @@ async def enforce_profile_completion(request: Request, call_next):
 
     db: Session = SessionLocal()
     try:
-        user = db.query(User).get(int(user_id))
-        if user and not user.profile_completed:
+        user = db.query(User).filter(User.id == int(user_id)).first()
+        if user:    
+            db.refresh(user)  # ✅ получаем актуальные данные
+        if user and user.profile_completed != True:
             if not path_in_whitelist(request.url.path):
                 return RedirectResponse("/setup-profile")
     finally:
@@ -111,7 +129,7 @@ def auth_page(request: Request):
 
 @app.get("/setup-profile", response_class=HTMLResponse)
 def setup_profile_page(request: Request):
-    return templates.TemplateResponse("setup_profile.html", {"request": request})
+    return templates.TemplateResponse("setup_profile.html", {"request": request, "countries": countries})
 
 @app.post("/register")
 def register(request: Request, email: str = Form(...), password: str = Form(...), db: Session = Depends(get_db)):
@@ -143,16 +161,25 @@ def logout():
     return response
 
 # ---------------------- Profile page ----------------------
+from sqlalchemy.orm import joinedload
+
 @app.get("/profile")
 def profile_page(request: Request, db: Session = Depends(get_db)):
-    user = current_user(request)
-    if not user:
+    user_cookie = current_user(request)
+    if not user_cookie:
         return RedirectResponse("/auth")
+
+    # Загружаем пользователя с рамками
+    user = db.query(User)\
+        .options(joinedload(User.frames).joinedload(UserFrame.frame))\
+        .filter(User.id == user_cookie.id)\
+        .first()
 
     return templates.TemplateResponse(
         "profile.html",
         {"request": request, "user": user}
     )
+
 
 # ---------------------- Edit profile page ✅ ----------------------
 @app.get("/edit-profile")
@@ -169,3 +196,16 @@ def edit_profile_page(request: Request):
 # ---------------------- Security routes ----------------------
 from backend.routers import security
 app.include_router(security.router)
+
+#---------------------- Economy routes ----------------------
+from backend.routers import economy
+app.include_router(economy.router)
+
+#---------------------- Frames routes ----------------------
+from backend.routers import frames
+app.include_router(frames.router)
+
+#---------------------- Avatar settings routes ----------------------
+from backend.routers import avatar_settings
+app.include_router(avatar_settings.router)
+

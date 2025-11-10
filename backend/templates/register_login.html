@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Tournament Platform — Login / Register</title>
 
-    <link rel="stylesheet" href="/static/register_login.css?v=3">
+    <link rel="stylesheet" href="/static/register_login.css?v=4">
     <link
         href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
         rel="stylesheet"
@@ -25,7 +25,11 @@
                 </div>
                 <span>or use your email for registration</span>
                 <input type="email" name="email" placeholder="Email" required />
-                <input type="password" name="password" placeholder="Password" required />
+                <input type="password" id="password" name="password" placeholder="Password" required />
+                <!-- Strength bar under input -->
+                <div class="password-strength-bar">
+                    <div id="passwordStrength"></div>
+                </div>
                 <button type="submit">Sign Up</button>
             </form>
         </div>
@@ -79,6 +83,26 @@
 
         signInButton.addEventListener('click', () => {
             container.classList.remove("right-panel-active");
+        });
+
+        const passwordInput = document.getElementById("password");
+        const strengthBar = document.getElementById("passwordStrength");
+
+        passwordInput.addEventListener("input", () => {
+            const pwd = passwordInput.value;
+            let score = 0;
+
+            if (pwd.length >= 6) score++;
+            if (pwd.length >= 10) score++;
+            if (/[A-Z]/.test(pwd)) score++;
+            if (/[0-9]/.test(pwd)) score++;
+            if (/[^A-Za-z0-9]/.test(pwd)) score++;
+
+            const widths = ["0%", "25%", "50%", "75%", "100%"];
+            const colors = ["transparent", "#ff3b30", "#ff9500", "#ffcc00", "#28cd41"];
+
+            strengthBar.style.width = widths[score];
+            strengthBar.style.backgroundColor = colors[score];
         });
     </script>
 </body>
