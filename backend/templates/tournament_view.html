@@ -1,0 +1,505 @@
+{% extends "layout/base.html" %}
+
+{% block head %}
+<link rel="stylesheet" href="/static/tournament_view.css?v=12">
+{% endblock %}
+
+{% block content %}
+
+<section class="tour-hero">
+    <div class="tour-hero-inner">
+
+        <div class="tour-hero-left">
+            <a href="/tournaments" class="breadcrumb">
+                <i class="fa-solid fa-chevron-left"></i> Back to tournaments
+            </a>
+
+            <h1 class="tour-title">{{ tournament.name }}</h1>
+
+            <div class="tour-meta-row">
+                <span class="meta-item">
+                    <i class="fa-solid fa-gamepad"></i>
+                    {{ tournament.discipline or "Unknown game" }}
+                </span>
+
+                <span class="meta-item">
+                    <i class="fa-solid fa-calendar"></i>
+                    {% if tournament.start_date %}
+                        {{ tournament.start_date.strftime("%d %b %Y, %H:%M") }}
+                    {% else %}
+                        Date TBA
+                    {% endif %}
+                </span>
+
+                <span class="meta-item">
+                    <i class="fa-solid fa-flag-checkered"></i>
+                    {{ status }}
+                </span>
+            </div>
+        </div>
+
+        <div class="tour-hero-right">
+            {% set logo = GAME_LOGOS.get(tournament.discipline) %}
+            {% if logo %}
+                <div class="game-logo-wrap">
+                    <img src="/static/logo/{{ logo }}" alt="{{ tournament.discipline }}">
+                </div>
+            {% else %}
+                <div class="game-logo-placeholder">
+                    <i class="fa-solid fa-trophy"></i>
+                </div>
+            {% endif %}
+        </div>
+
+    </div>
+</section>
+
+
+<section class="tour-main">
+
+    <!-- TOP STATS -->
+    <div class="tour-stats">
+        <div class="stat-card">
+            <div class="stat-label">Prize pool</div>
+            <div class="stat-value">${{ prize }}</div>
+        </div>
+
+        <div class="stat-card">
+            <div class="stat-label">Format</div>
+            <div class="stat-value">{{ format }}</div>
+        </div>
+
+        <div class="stat-card">
+            <div class="stat-label">Teams</div>
+            <div class="stat-value">{{ team_count }}</div>
+        </div>
+
+        <div class="stat-card">
+            <div class="stat-label">Status</div>
+            <div class="stat-value status-pill">{{ status }}</div>
+        </div>
+    </div>
+
+    <!-- TABS -->
+    <div class="tour-tabs">
+        <button class="tour-tab active" data-tab="overview">Overview</button>
+        <button class="tour-tab" data-tab="teams">Teams</button>
+        <button class="tour-tab" data-tab="matches">Matches</button>
+        <button class="tour-tab" data-tab="standings">Standings</button>
+        <button class="tour-tab" data-tab="bracket">Bracket</button>
+    </div>
+
+    <!-- TAB CONTENTS -->
+    <div class="tour-tabs-content">
+
+        <!-- OVERVIEW -->
+        <div class="tab-pane active" id="tab-overview">
+            <div class="tour-layout">
+                <!-- LEFT -->
+                <div class="tour-left">
+                    <div class="card">
+                        <h2 class="card-title">About this tournament</h2>
+                        <p class="card-text">
+                            {% if tournament.description %}
+                                {{ tournament.description }}
+                            {% else %}
+                                No description has been added yet. Stay tuned for more details about this event.
+                            {% endif %}
+                        </p>
+                    </div>
+
+                    <div class="card">
+                        <h2 class="card-title">Schedule</h2>
+
+                        <div class="info-row">
+                            <span class="info-label">Start</span>
+                            <span class="info-value">
+                                {% if tournament.start_date %}
+                                    {{ tournament.start_date.strftime("%d %b %Y, %H:%M") }}
+                                {% else %}
+                                    TBA
+                                {% endif %}
+                            </span>
+                        </div>
+
+                        <div class="info-row">
+                            <span class="info-label">End</span>
+                            <span class="info-value">
+                                {% if tournament.end_date %}
+                                    {{ tournament.end_date.strftime("%d %b %Y, %H:%M") }}
+                                {% else %}
+                                    TBA
+                                {% endif %}
+                            </span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- RIGHT -->
+                <aside class="tour-right">
+                    <div class="card">
+                        <h2 class="card-title">Tournament info</h2>
+
+                        <div class="info-row">
+                            <span class="info-label">Game</span>
+                            <span class="info-value">{{ tournament.discipline or "Unknown" }}</span>
+                        </div>
+
+                        <div class="info-row">
+                            <span class="info-label">Mode</span>
+                            <span class="info-value">{{ format }}</span>
+                        </div>
+
+                        <div class="info-row">
+                            <span class="info-label">Teams</span>
+                            <span class="info-value">{{ team_count }}</span>
+                        </div>
+
+                        <div class="info-row">
+                            <span class="info-label">Status</span>
+                            <span class="info-value">{{ status }}</span>
+                        </div>
+
+                        <div class="info-row">
+                            <span class="info-label">Created by</span>
+                            <span class="info-value">
+                                User #{{ tournament.created_by or "TBA" }}
+                            </span>
+                        </div>
+                    </div>
+
+                    <div class="card subtle">
+                        <p class="small-note">
+                            Registration and match details are managed inside the mobile app.
+                        </p>
+                    </div>
+                </aside>
+            </div>
+        </div>
+
+        <!-- TEAMS -->
+        <div class="tab-pane" id="tab-teams">
+            <div class="card">
+                <h2 class="card-title">Teams</h2>
+
+                {% if teams %}
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Team name</th>
+                            <th>Created at</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for team in teams %}
+                        <tr>
+                            <td>{{ loop.index }}</td>
+                            <td>{{ team.name }}</td>
+                            <td>
+                                {% if team.created_at %}
+                                    {{ team.created_at.strftime("%d %b %Y") }}
+                                {% else %}
+                                    -
+                                {% endif %}
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+                {% else %}
+                    <p class="empty-text">No teams have been added to this tournament yet.</p>
+                {% endif %}
+            </div>
+        </div>
+
+        <!-- MATCHES -->
+        <div class="tab-pane" id="tab-matches">
+            <div class="card">
+                <h2 class="card-title">Matches</h2>
+
+                {% if matches %}
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Date</th>
+                            <th>Team 1</th>
+                            <th>Score</th>
+                            <th>Team 2</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for m in matches %}
+                        <tr>
+                            <td>
+                                {% if m.match_date %}
+                                    {{ m.match_date.strftime("%d %b %Y, %H:%M") }}
+                                {% else %}
+                                    TBA
+                                {% endif %}
+                            </td>
+                            <td>{{ m.team1.name if m.team1 else "-" }}</td>
+                            <td>
+                                {% if m.score_team1 is not none and m.score_team2 is not none %}
+                                    {{ m.score_team1 }} : {{ m.score_team2 }}
+                                {% else %}
+                                    -
+                                {% endif %}
+                            </td>
+                            <td>{{ m.team2.name if m.team2 else "-" }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+                {% else %}
+                    <p class="empty-text">No matches have been scheduled yet.</p>
+                {% endif %}
+            </div>
+        </div>
+
+        <!-- STANDINGS -->
+        <div class="tab-pane" id="tab-standings">
+            <div class="card">
+                <h2 class="card-title">Standings</h2>
+
+                {% if standings %}
+                <table class="table table-standings">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Team</th>
+                            <th>MP</th>
+                            <th>W</th>
+                            <th>D</th>
+                            <th>L</th>
+                            <th>GF</th>
+                            <th>GA</th>
+                            <th>GD</th>
+                            <th>Pts</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for row in standings %}
+                        <tr>
+                            <td>{{ loop.index }}</td>
+                            <td>{{ row.team.name }}</td>
+                            <td>{{ row.played }}</td>
+                            <td>{{ row.wins }}</td>
+                            <td>{{ row.draws }}</td>
+                            <td>{{ row.losses }}</td>
+                            <td>{{ row.scored }}</td>
+                            <td>{{ row.conceded }}</td>
+                            <td>{{ row.scored - row.conceded }}</td>
+                            <td class="cell-points">{{ row.points }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+                {% else %}
+                    <p class="empty-text">Standings will appear after matches are played.</p>
+                {% endif %}
+            </div>
+        </div>
+        
+            <!-- BRACKET -->
+        <div class="tab-pane" id="tab-bracket">
+            <h2 class="br-title-main">Bracket</h2>
+
+            {% if bracket %}
+            <div class="bracket-wrapper" id="bracketWrapper">
+                <!-- Сюда будем рисовать линии -->
+                <svg class="bracket-lines" id="bracketLines"></svg>
+
+                <div class="bracket-grid" style="--br-rounds: {{ bracket|length }}">
+                    {% for round in bracket %}
+                        {% set round_index = loop.index0 %}
+
+                        {# Определяем тип раунда, чтобы понимать где Final, где Bronze #}
+                        {% set round_label_lower = round.label|lower %}
+                        {% set round_type = "main" %}
+                        {% if "3rd" in round_label_lower or "third" in round_label_lower or "bronze" in round_label_lower %}
+                            {% set round_type = "bronze" %}
+                        {% elif "semi" in round_label_lower %}
+                            {% set round_type = "semi" %}
+                        {% elif "final" in round_label_lower %}
+                            {% set round_type = "final" %}
+                        {% endif %}
+
+                        <div class="br-round"
+                            data-round-index="{{ round_index }}"
+                            data-round-type="{{ round_type }}"
+                            data-round-label="{{ round.label }}">
+                            <div class="br-round-title">{{ round.label }}</div>
+
+                            <div class="br-round-matches">
+                                {% for match in round.matches %}
+                                    {% set match_index = loop.index0 %}
+                                    <div class="br-match"
+                                        data-round="{{ round_index }}"
+                                        data-index="{{ match_index }}">
+                                        <!-- team1 -->
+                                        <div class="br-team-row
+                                            {% if match.score_team1 is not none and match.score_team2 is not none and match.score_team1 > match.score_team2 %}
+                                                winner
+                                            {% endif %}">
+                                            <span class="br-team-name">
+                                                {{ match.team1.name if match.team1 else "TBA" }}
+                                            </span>
+                                            <span class="br-team-score">
+                                                {{ match.score_team1 if match.score_team1 is not none else 0 }}
+                                            </span>
+                                        </div>
+                                        <!-- team2 -->
+                                        <div class="br-team-row
+                                            {% if match.score_team1 is not none and match.score_team2 is not none and match.score_team2 > match.score_team1 %}
+                                                winner
+                                            {% endif %}">
+                                            <span class="br-team-name">
+                                                {{ match.team2.name if match.team2 else "TBA" }}
+                                            </span>
+                                            <span class="br-team-score">
+                                                {{ match.score_team2 if match.score_team2 is not none else 0 }}
+                                            </span>
+                                        </div>
+                                    </div>
+                                {% endfor %}
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+            {% else %}
+                <p class="empty-text">Bracket will be generated when matches are assigned to rounds.</p>
+            {% endif %}
+        </div>
+
+    </div>
+
+</section>
+
+<!-- TABS SCRIPT -->
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+    // --- табы (как у тебя было) ---
+    const tabs = document.querySelectorAll(".tour-tab");
+    const panes = document.querySelectorAll(".tab-pane");
+
+    tabs.forEach(tab => {
+        tab.addEventListener("click", () => {
+            const target = tab.getAttribute("data-tab");
+
+            tabs.forEach(t => t.classList.remove("active"));
+            panes.forEach(p => p.classList.remove("active"));
+
+            tab.classList.add("active");
+            document.getElementById("tab-" + target).classList.add("active");
+
+            if (target === "bracket") {
+                drawBracketLines();
+            }
+        });
+    });
+
+    // --- отрисовка линий для BRACKET ---
+    function drawBracketLines() {
+        const wrapper = document.getElementById("bracketWrapper");
+        const svg = document.getElementById("bracketLines");
+        if (!wrapper || !svg) return;
+
+        const rounds = Array.from(wrapper.querySelectorAll(".br-round"));
+        if (!rounds.length) return;
+
+        const matchesByRound = rounds.map(r =>
+            Array.from(r.querySelectorAll(".br-match"))
+        );
+
+        // размеры svg
+        const wrapperRect = wrapper.getBoundingClientRect();
+        const width = wrapper.clientWidth;
+        const height = wrapper.scrollHeight;
+        svg.setAttribute("width", width);
+        svg.setAttribute("height", height);
+        svg.innerHTML = "";
+
+        function getCenter(el, side) {
+            const r = el.getBoundingClientRect();
+            const x = (side === "left" ? r.left : r.right) - wrapperRect.left;
+            const y = r.top + r.height / 2 - wrapperRect.top;
+            return { x, y };
+        }
+
+        function drawConnector(fromEl, toEl) {
+            if (!fromEl || !toEl) return;
+            const from = getCenter(fromEl, "right");
+            const to = getCenter(toEl, "left");
+            const midX = (from.x + to.x) / 2;
+
+            const path = document.createElementNS("http://www.w3.org/2000/svg", "path");
+            const d = `M ${from.x} ${from.y} H ${midX} V ${to.y} H ${to.x}`;
+            path.setAttribute("d", d);
+            path.setAttribute("fill", "none");
+            path.setAttribute("stroke", "#d3d3d3");
+            path.setAttribute("stroke-width", "2");
+            path.setAttribute("stroke-linecap", "round");
+            svg.appendChild(path);
+        }
+
+        const bronzeIndex = rounds.findIndex(r =>
+            (r.dataset.roundType || "").toLowerCase() === "bronze"
+        );
+        const semiIndex = rounds.findIndex(r =>
+            (r.dataset.roundType || "").toLowerCase() === "semi"
+        );
+
+        // Соединяем все подряд идущие раунды, кроме тех, где следующий — bronze
+        for (let i = 0; i < rounds.length - 1; i++) {
+            const fromType = (rounds[i].dataset.roundType || "").toLowerCase();
+            const toType = (rounds[i + 1].dataset.roundType || "").toLowerCase();
+
+            if (toType === "bronze") {
+                // bronze рисуем отдельно
+                continue;
+            }
+
+            const fromMatches = matchesByRound[i];
+            const toMatches = matchesByRound[i + 1];
+            if (!fromMatches.length || !toMatches.length) continue;
+
+            const groupSize = Math.ceil(fromMatches.length / toMatches.length);
+
+            fromMatches.forEach((m, idx) => {
+                const targetIndex = Math.floor(idx / groupSize);
+                const targetMatch = toMatches[targetIndex] || toMatches[0];
+                drawConnector(m, targetMatch);
+            });
+        }
+
+        // Специально: полуфиналы → матч за 3 место
+        if (bronzeIndex !== -1 && semiIndex !== -1) {
+            const bronzeMatches = matchesByRound[bronzeIndex];
+            const semiMatches = matchesByRound[semiIndex];
+            if (bronzeMatches.length && semiMatches.length) {
+                const bronzeMatch = bronzeMatches[0];
+                semiMatches.forEach(m => drawConnector(m, bronzeMatch));
+            }
+        }
+    }
+
+    // Перерисовываем линии при первом открытии страницы,
+    // если вкладка Bracket уже активна
+    const bracketTab = document.querySelector('.tour-tab[data-tab="bracket"]');
+    if (bracketTab && bracketTab.classList.contains("active")) {
+        drawBracketLines();
+    }
+
+    // Перерисовываем при ресайзе
+    window.addEventListener("resize", () => {
+        const bracketPane = document.getElementById("tab-bracket");
+        if (bracketPane && bracketPane.classList.contains("active")) {
+            drawBracketLines();
+        }
+    });
+});
+</script>
+
+{% endblock %}

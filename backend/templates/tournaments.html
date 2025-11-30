@@ -1,0 +1,83 @@
+{% extends "layout/base.html" %}
+
+{% block head %}
+<link rel="stylesheet" href="/static/tournaments.css?v=4">
+{% endblock %}
+
+
+{% block content %}
+
+<!-- HERO -->
+<section class="big-hero">
+    <div class="hero-inner">
+        <h1 class="hero-title">Find Your Tournament</h1>
+        <p class="hero-subtitle">Browse upcoming esports events and choose your battlefield</p>
+    </div>
+</section>
+
+<!-- FILTER BOX -->
+<div class="filter-box">
+    <form method="get" class="filter-form">
+        <select name="game">
+            <option value="">All Games</option>
+            {% for g in games %}
+            <option value="{{ g }}" {% if game == g %}selected{% endif %}>{{ g }}</option>
+            {% endfor %}
+        </select>
+
+        <button class="btn-filter">
+            <i class="fa-solid fa-filter"></i> Apply
+        </button>
+    </form>
+</div>
+
+<!-- LIST -->
+<div class="tournament-list">
+    {% for t in tournaments %}
+    <a href="/tournament/{{ t.id }}" class="t-item">
+
+        <!-- IMAGE -->
+        <div class="t-img">
+            <img src="/static/logo/{{ GAME_LOGOS[t.discipline] }}" alt="{{ t.discipline }}">
+        </div>
+
+        <!-- MAIN CONTENT -->
+        <div class="t-main">
+            <h2 class="t-name">{{ t.name }}</h2>
+
+            <div class="t-meta">
+                <span><i class="fa-solid fa-gamepad"></i> {{ t.discipline }}</span>
+                <span><i class="fa-solid fa-users"></i> {{ t.team_count or "Teams TBA" }}</span>
+                <span><i class="fa-solid fa-calendar"></i>
+                    {{ t.start_date.strftime("%d %b %Y") if t.start_date else "TBA" }}
+                </span>
+            </div>
+
+            <div class="t-details">
+                <div class="detail">
+                    <div class="d-title">Prize</div>
+                    <div class="d-value">${{ t.entry_price or 0 }}</div>
+                </div>
+
+                <div class="detail">
+                    <div class="d-title">Format</div>
+                    <div class="d-value">{{ t.format or "TBA" }}</div>
+                </div>
+
+                <div class="detail">
+                    <div class="d-title">Status</div>
+                    <div class="d-value">{{ t.status or "Planned" }}</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ACTION -->
+        <div class="t-action">
+            <div class="view-btn">View</div>
+        </div>
+
+    </a>
+    {% endfor %}
+</div>
+
+{% endblock %}

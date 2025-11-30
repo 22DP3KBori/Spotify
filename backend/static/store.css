@@ -1,3 +1,139 @@
+/* -----------------------------
+   UNIVERSAL CARD STYLE (frames + badges)
+-------------------------------- */
+
+.store-grid,
+.badges-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+    gap: 20px;
+}
+
+/* Одинаковая карточка */
+.store-item {
+    background: white;
+    border-radius: 14px;
+    padding: 15px;
+    text-align: center;
+    width: 180px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.06);
+    transition: transform .2s ease, box-shadow .2s ease;
+}
+
+.store-item:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 18px rgba(0,0,0,0.12);
+}
+
+/* Единый превью контейнер */
+.item-preview {
+    width: 100%;
+    height: 150px;
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.item-preview img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+}
+
+/* Название */
+.store-item h3 {
+    font-size: 16px;
+    font-weight: 600;
+    margin: 8px 0 5px;
+}
+
+/* Цена (единый стиль) */
+.price {
+    font-size: 15px;
+    font-weight: 600;
+    color: #EAB308;
+    margin-bottom: 12px;
+}
+
+/* Кнопки */
+.buy-btn,
+.owned-btn {
+    padding: 8px 14px;
+    width: 100%;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+    border: none;
+    transition: 0.2s;
+}
+
+/* Buy */
+.buy-btn {
+    background: linear-gradient(90deg, #FF7043, #FF416C);
+    color: white;
+}
+.buy-btn:hover {
+    opacity: 0.9;
+    transform: translateY(-1px);
+}
+
+/* Owned */
+.owned-btn {
+    background: #e0e0e0;
+    color: #555;
+}
+
+/* -----------------------------
+   RARITY TAG STYLE
+------------------------------ */
+
+.rarity-tag {
+    display: inline-block;
+    margin: 5px auto 10px auto;
+    padding: 4px 10px;
+    border-radius: 8px;
+    font-size: 11px;
+    font-weight: 700;
+    color: white;
+    text-transform: uppercase;
+    letter-spacing: 0.4px;
+}
+
+/* Default */
+.rarity-tag.default { background: #9e9e9e; }
+
+/* Rare */
+.rarity-tag.rare {
+    background: #3b82f6;
+    box-shadow: 0 0 6px rgba(59,130,246,0.7);
+}
+
+/* Epic */
+.rarity-tag.epic {
+    background: #a855f7;
+    box-shadow: 0 0 10px rgba(168,85,247,0.75);
+}
+
+/* Legendary */
+.rarity-tag.legendary {
+    background: linear-gradient(90deg, #fbbf24, #f59e0b);
+    box-shadow: 0 0 12px rgba(251,191,36,0.85);
+}
+
+/* Super rare */
+.rarity-tag.super_rare {
+    background: linear-gradient(90deg, #06b6d4, #2563eb);
+    box-shadow: 0 0 12px rgba(37,99,235,0.85);
+}
+
+/* Mythic */
+.rarity-tag.mythic {
+    background: linear-gradient(90deg, #e11d48, #8b5cf6, #06b6d4);
+    box-shadow: 0 0 15px rgba(225,29,72,0.8);
+}
+
+
 .store-wrapper {
   max-width: 1000px;
   margin: 40px auto;
@@ -189,3 +325,186 @@
   font-weight: 800;
   font-size: 18px;
 }
+
+
+/* ---------- BADGE STORE LAYOUT ---------- */
+
+.badges-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
+    gap: 25px;
+    padding: 20px 10px;
+}
+
+.badge-item {
+    background: #ffffff;
+    border-radius: 18px;
+    padding: 20px;
+    text-align: center;
+    box-shadow: 0 6px 18px rgba(0,0,0,0.08);
+    transition: 0.25s ease;
+}
+
+.badge-item:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 10px 26px rgba(0,0,0,0.12);
+}
+
+.badge-preview {
+    width: 150px;
+    height: 150px;
+    margin: 0 auto 10px auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.badge-preview img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+}
+
+/* Make price stand out */
+.badge-item .price {
+    font-size: 18px;
+    font-weight: 600;
+    margin: 10px 0 15px 0;
+}
+
+/* Center button */
+.badge-item button {
+    width: 100%;
+}
+
+
+/* ----------------------------------
+   BADGES styled exactly like FRAMES
+-----------------------------------*/
+
+.frame-style-item {
+    background: white;
+    border-radius: 14px;
+    padding: 15px;
+    text-align: center;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.06);
+    transition: transform .2s ease, box-shadow .2s ease;
+}
+
+.frame-style-item:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 18px rgba(0,0,0,0.12);
+}
+
+.badge-frame-preview {
+    width: 100%;
+    height: 140px;
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.badge-frame-preview img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+}
+
+.frame-style-item h3 {
+    font-size: 16px;
+    margin: 8px 0 5px;
+    font-weight: 600;
+}
+
+.frame-style-item .price {
+    font-size: 15px;
+    font-weight: 600;
+    color: #EAB308;
+    margin-bottom: 12px;
+}
+
+.frame-style-item .buy-btn,
+.frame-style-item .owned-btn {
+    width: 100%;
+}
+
+/* ----------- RARITY TAGS ----------- */
+.rarity-tag {
+    display: inline-block;
+    margin: 5px auto 12px auto;
+    padding: 4px 10px;
+    border-radius: 8px;
+    font-size: 12px;
+    font-weight: 700;
+    color: white;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+/* DEFAULT */
+.rarity-tag.default {
+    background: #9e9e9e;
+}
+
+/* RARE */
+.rarity-tag.rare {
+    background: #3b82f6;
+    box-shadow: 0 0 6px rgba(59,130,246,0.7);
+}
+
+/* EPIC */
+.rarity-tag.epic {
+    background: #a855f7;
+    box-shadow: 0 0 10px rgba(168,85,247,0.75);
+}
+
+/* LEGENDARY */
+.rarity-tag.legendary {
+    background: linear-gradient(90deg, #fbbf24, #f59e0b);
+    box-shadow: 0 0 12px rgba(251,191,36,0.85);
+}
+
+/* SUPER RARE */
+.rarity-tag.super_rare {
+    background: linear-gradient(90deg, #06b6d4, #2563eb);
+    box-shadow: 0 0 12px rgba(37,99,235,0.85);
+}
+
+/* MYTHIC */
+.rarity-tag.mythic {
+    background: linear-gradient(90deg, #e11d48, #8b5cf6, #06b6d4);
+    box-shadow: 0 0 15px rgba(225,29,72,0.8);
+}
+
+
+/* Card glow by rarity */
+.store-item.default {
+    border: 2px solid #bdbdbd;
+}
+
+.store-item.rare {
+    border: 2px solid #3b82f6;
+    box-shadow: 0 0 10px rgba(59,130,246,0.5);
+}
+
+.store-item.epic {
+    border: 2px solid #a855f7;
+    box-shadow: 0 0 12px rgba(168,85,247,0.55);
+}
+
+.store-item.legendary {
+    border: 2px solid #fbbf24;
+    box-shadow: 0 0 14px rgba(251,191,36,0.7);
+}
+
+.store-item.super_rare {
+    border: 2px solid #06b6d4;
+    box-shadow: 0 0 14px rgba(6,182,212,0.7);
+}
+
+.store-item.mythic {
+    border: 2px solid #e11d48;
+    box-shadow: 0 0 16px rgba(225,29,72,0.8);
+}
+

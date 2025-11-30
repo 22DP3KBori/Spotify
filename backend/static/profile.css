@@ -1,0 +1,487 @@
+/* ====== LAYOUT WRAPPER ====== */
+
+.profile-wrapper {
+    max-width: 900px;
+    margin: 40px auto;
+}
+
+.profile-grid {
+    display: grid;
+    grid-template-columns: 280px 1fr;
+    gap: 25px;
+}
+
+/* ====== LEFT SIDEBAR ====== */
+
+.profile-side {
+    background: white;
+    padding: 25px;
+    border-radius: 12px;
+    text-align: center;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.07);
+}
+
+.profile-photo {
+    width: 120px;
+    height: 120px;
+    border-radius: 12px;
+    object-fit: cover;
+    border: 3px solid #FF7043;
+    margin-bottom: 15px;
+}
+
+.profile-side h2 {
+    margin-top: 10px;
+    margin-bottom: 8px;
+    font-size: 22px;
+    font-weight: 700;
+}
+
+.country {
+    font-size: 14px;
+    margin-bottom: 20px;
+}
+
+/* ====== MAIN / BANNER ====== */
+
+.profile-banner {
+    background: linear-gradient(90deg, #FF7043, #FF416C);
+    padding: 30px;
+    border-radius: 14px;
+    display: flex;
+    align-items: center;
+    gap: 25px;
+    color: white;
+    margin-bottom: 20px;
+}
+
+.profile-main h1 {
+    font-size: 24px;
+    margin-bottom: 8px;
+}
+
+.profile-banner img {
+    width: 120px;
+    height: 120px;
+    border-radius: 12px;
+    object-fit: cover;
+    border: 3px solid rgba(255,255,255,0.8);
+}
+
+.profile-info h2 {
+    font-size: 26px;
+    font-weight: 700;
+    margin-bottom: 8px;
+}
+
+.profile-info p {
+    margin: 3px 0;
+    font-size: 14px;
+}
+
+/* ====== GENERIC CARD ====== */
+
+.card {
+    background: white;
+    padding: 22px;
+    border-radius: 12px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.07);
+    margin-bottom: 20px;
+}
+
+.card h3 {
+    margin-bottom: 15px;
+}
+
+.full {
+    width: 100%;
+}
+
+/* ====== TAGS ====== */
+
+.tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.tag {
+    background: #FF7043;
+    padding: 6px 14px;
+    border-radius: 20px;
+    font-size: 13px;
+    color: white;
+    font-weight: 500;
+}
+
+/* ====== AVATAR ====== */
+
+.avatar-wrapper {
+    position: relative;
+    display: inline-block;
+    width: 120px;
+    height: 120px;
+}
+
+.avatar {
+    position: absolute;
+    border-radius: 12px;
+    object-fit: cover;
+    z-index: 1;
+    top: var(--top, 0);
+    left: var(--left, 0);
+    width: var(--size, 120px);
+    height: var(--size, 120px);
+}
+
+.avatar-frame {
+    position: absolute;
+    top: -2px;
+    left: -2px;
+    width: 130px;
+    height: 130px;
+    pointer-events: none;
+    z-index: 2;
+}
+
+/* Frame adjustments */
+.avatar-wrapper.fire .avatar-frame {
+    width: 135px;
+    height: 150px;
+    top: -20px;
+    left: -5px;
+}
+
+.avatar-wrapper.ice .avatar-frame {
+    width: 130px;
+    height: 135px;
+    top: -10px;
+    left: -5px;
+}
+
+.avatar-wrapper.gold { --size: 120px; --top: 5px; --left: 1px; }
+.avatar-wrapper.silver { --size: 120px; --top: 5px; --left: 0px; }
+.avatar-wrapper.bronze { --size: 120px; --top: 5px; --left: 1px; }
+.avatar-wrapper.neon { --size: 120px; --top: 5px; --left: 3px; }
+
+.avatar-wrapper.fire { --size: 112px; --top: 10px; --left: 9px; }
+.avatar-wrapper.ice  { --size: 108px; --top: 8px;  --left: 8px; }
+
+/* Edit avatar button */
+
+.avatar-edit {
+    position: absolute;
+    right: 95px;
+    bottom: -20px;
+    width: 36px;
+    height: 36px;
+    border-radius: 999px;
+    background: #FF7043;
+    color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 2px solid #fff;
+    box-shadow: 0 6px 16px rgba(0,0,0,0.15);
+    z-index: 3;
+    transition: transform .15s ease, opacity .15s ease;
+    text-decoration: none;
+}
+
+.avatar-edit:hover { transform: scale(1.05); opacity: 1; }
+.avatar-edit i { font-size: 14px; }
+
+/* ====== RANK BOX ====== */
+
+.rank-box {
+    background: linear-gradient(180deg, #fff, #f9f9f9);
+    border: 1px solid #eee;
+    border-radius: 12px;
+    padding: 16px;
+    text-align: center;
+    box-shadow: 0 3px 10px rgba(0,0,0,0.05);
+}
+
+.rank-title {
+    font-size: 14px;
+    opacity: 0.7;
+    font-weight: 600;
+}
+
+.rank-value {
+    font-size: 18px;
+    font-weight: 700;
+    color: #FF7043;
+    margin: 6px 0 10px;
+}
+
+.rank-value i {
+    color: #FFB800;
+    margin-right: 6px;
+}
+
+.rank-progress {
+    position: relative;
+    height: 12px;
+    background: #eee;
+    border-radius: 8px;
+    overflow: hidden;
+    margin: 6px 0;
+}
+
+.rank-fill {
+    height: 100%;
+    border-radius: 8px;
+    transition: width 0.5s ease-out;
+}
+
+.rank-box small {
+    font-size: 13px;
+    color: #666;
+}
+
+/* Progress bar colors */
+.rank-box.bronze   .rank-fill { background: linear-gradient(90deg, #CD7F32, #b26b2d) !important; }
+.rank-box.silver   .rank-fill { background: linear-gradient(90deg, #C0C0C0, #a0a0a0) !important; }
+.rank-box.gold     .rank-fill { background: linear-gradient(90deg, #FFD700, #FFB400) !important; }
+.rank-box.platinum .rank-fill { background: linear-gradient(90deg, #5CE1E6, #00C6FF) !important; }
+.rank-box.diamond  .rank-fill { background: linear-gradient(90deg, #A66CFF, #7F00FF) !important; }
+
+/* Rank frame colors */
+.rank-box.bronze   { border-color: #b26b2d; }
+.rank-box.silver   { border-color: #a0a0a0; }
+.rank-box.gold     { border-color: #FFB400; }
+.rank-box.platinum { border-color: #00C6FF; }
+.rank-box.diamond  { border-color: #7F00FF; }
+
+/* Rank text colors */
+.rank-box.bronze   .rank-value { color: #CD7F32 !important; }
+.rank-box.silver   .rank-value { color: #C0C0C0 !important; }
+.rank-box.gold     .rank-value { color: #FFD700 !important; }
+.rank-box.platinum .rank-value { color: #00C6FF !important; }
+.rank-box.diamond  .rank-value { color: #7F00FF !important; }
+
+/* ====== BADGE NEAR NICK ====== */
+
+.nickname-with-badge {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    justify-content: center;
+}
+
+.profile-badge {
+    width: 28px;
+    height: 28px;
+    object-fit: contain;
+    border-radius: 6px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+    background: white;
+    padding: 3px;
+}
+
+/* ====== BUTTONS ====== */
+
+.edit-btn {
+    display: block;
+    width: 100%;
+    background: linear-gradient(90deg, #FF7043, #FF416C);
+    color: white !important;
+    padding: 10px 16px;
+    margin-top: 18px;
+    border-radius: 8px;
+    font-weight: 600;
+    border: none;
+    cursor: pointer;
+    text-decoration: none;
+    text-align: center;
+    transition: .2s;
+}
+
+.edit-btn:hover {
+    opacity: .85;
+}
+
+/* ====== BADGES SCROLLER (RIGHT COLUMN) ====== */
+
+.badges-card {
+    padding: 18px;
+}
+
+.badges-scroll {
+    display: flex;
+    gap: 10px;
+    overflow-x: auto;
+    padding-bottom: 8px;
+    scrollbar-width: thin;
+}
+
+.badges-scroll::-webkit-scrollbar {
+    height: 8px;
+}
+
+.badges-scroll::-webkit-scrollbar-thumb {
+    background: #FF7043;
+    border-radius: 10px;
+}
+
+.badges-scroll::-webkit-scrollbar-track {
+    background: #ffe5d7;
+}
+
+/* Значок бейджа в правом блоке */
+.badge-icon {
+    width: 60px;
+    height: 60px;
+    padding: 8px;
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+    object-fit: contain;
+}
+
+/* ====== MAIN GRID (LEFT + RIGHT COLUMNS) ====== */
+
+.profile-main-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1.4fr) minmax(260px, 0.9fr);
+    gap: 25px;
+    align-items: flex-start;
+}
+
+/* ====== MOBILE ADAPTIVE ====== */
+
+@media (max-width: 900px) {
+    .profile-wrapper {
+        margin: 20px auto;
+        padding: 0 10px;
+        max-width: 100%;
+    }
+
+    .profile-grid {
+        grid-template-columns: 1fr;
+        gap: 20px;
+    }
+
+    .profile-main-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .profile-side {
+        padding: 20px;
+    }
+
+    .profile-banner {
+        padding: 18px;
+        gap: 15px;
+    }
+}
+
+/* Основной мобильный брейкпоинт для телефонов */
+@media (max-width: 768px) {
+
+    .profile-wrapper {
+        margin: 16px auto 24px;
+        padding: 0 10px;
+    }
+
+    /* Сайдбар сверху, потом баннер и контент — всё в одну колонку */
+    .profile-grid {
+        display: block;
+    }
+
+    .profile-side {
+        width: 100%;
+        margin-bottom: 16px;
+        padding: 18px;
+    }
+
+    .avatar-wrapper {
+        width: 95px;
+        height: 95px;
+        margin: 0 auto 12px;
+    }
+
+    .avatar {
+        width: 95px;
+        height: 95px;
+    }
+
+    .avatar-frame {
+        width: 105px;
+        height: 105px;
+    }
+
+    .profile-banner {
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+        padding: 16px;
+        border-radius: 12px;
+        margin-bottom: 16px;
+    }
+
+    .profile-main h1 {
+        font-size: 20px;
+        margin-bottom: 4px;
+    }
+
+    .profile-banner p {
+        font-size: 14px;
+    }
+
+    .profile-main-grid {
+        display: block;
+    }
+
+    .card {
+        padding: 16px;
+        margin-bottom: 14px;
+        border-radius: 10px;
+    }
+
+    .card h3 {
+        font-size: 17px;
+        margin-bottom: 10px;
+    }
+
+    .tag {
+        padding: 4px 10px;
+        font-size: 12px;
+    }
+
+    .badge-icon {
+        width: 40px;
+        height: 40px;
+        padding: 6px;
+        border-radius: 8px;
+        box-shadow: 0 2px 6px rgba(0,0,0,0.12);
+    }
+
+    .badges-scroll {
+        gap: 8px;
+        padding-bottom: 6px;
+    }
+
+    .edit-btn {
+        font-size: 14px;
+        padding: 8px 10px;
+    }
+}
+
+/* Очень маленькие экраны (iPhone SE и т.п.) */
+@media (max-width: 480px) {
+    .profile-main h1 {
+        font-size: 18px;
+    }
+
+    .card h3 {
+        font-size: 16px;
+    }
+
+    .badge-icon {
+        width: 34px;
+        height: 34px;
+        padding: 4px;
+    }
+}

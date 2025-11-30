@@ -1,0 +1,545 @@
+/* =============== TOURNAMENT VIEW PAGE ===============
+   Палитра: градиент #FF7043 → #FF416C, фон #f6f5f7
+   Стиль: строгий, как HLTV / Liquipedia
+===================================================== */
+
+/* Базовый фон вокруг */
+body {
+    background: #f6f5f7;
+}
+
+/* ===== HERO ===== */
+.tour-hero {
+    width: 100%;
+    background: linear-gradient(135deg, #FF7043, #FF416C);
+    color: #fff;
+    padding: 32px 0 28px;
+}
+
+.tour-hero-inner {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 32px;
+}
+
+.tour-hero-left {
+    flex: 1.4;
+}
+
+.tour-hero-right {
+    flex: 0.6;
+    display: flex;
+    justify-content: flex-end;
+}
+
+/* Хлебные крошки */
+.breadcrumb {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 13px;
+    color: rgba(255,255,255,0.9);
+    text-decoration: none;
+    margin-bottom: 10px;
+    opacity: 0.9;
+}
+
+.breadcrumb i {
+    font-size: 11px;
+}
+
+.breadcrumb:hover {
+    opacity: 1;
+}
+
+/* Заголовок турнира */
+.tour-title {
+    font-size: 30px;
+    font-weight: 800;
+    margin-bottom: 12px;
+}
+
+/* Мета-инфа под названием */
+.tour-meta-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 14px;
+    font-size: 14px;
+    opacity: 0.95;
+}
+
+.meta-item {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.meta-item i {
+    font-size: 14px;
+}
+
+/* Лого игры справа */
+.game-logo-wrap,
+.game-logo-placeholder {
+    width: 110px;
+    height: 110px;
+    border-radius: 24px;
+    background: rgba(0,0,0,0.12);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 10px 24px rgba(0,0,0,0.35);
+}
+
+.game-logo-wrap img {
+    max-width: 80%;
+    max-height: 80%;
+    object-fit: contain;
+}
+
+.game-logo-placeholder i {
+    font-size: 38px;
+}
+
+
+/* ===== MAIN CONTAINER ===== */
+
+.tour-main {
+    max-width: 1200px;
+    margin: 0 auto 80px;
+    padding: 24px 20px 40px;
+}
+
+/* ===== TOP STATS ===== */
+
+.tour-stats {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 16px;
+    margin-bottom: 26px;
+}
+
+.stat-card {
+    background: #ffffff;
+    border-radius: 10px;
+    padding: 12px 14px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.04);
+    border-top: 3px solid rgba(255,112,67,0.9);
+}
+
+.stat-label {
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: #999;
+    margin-bottom: 4px;
+}
+
+.stat-value {
+    font-size: 17px;
+    font-weight: 700;
+    color: #333;
+}
+
+.status-pill {
+    display: inline-flex;
+    align-items: center;
+    padding: 3px 10px;
+    border-radius: 999px;
+    background: #ffe1ea;
+    color: #ff3e68;
+    font-size: 13px;
+}
+
+
+/* ===== TABS ===== */
+
+.tour-tabs {
+    margin-top: 10px;
+    border-bottom: 1px solid #e3e3e3;
+    display: flex;
+    gap: 10px;
+    overflow-x: auto;
+    padding-bottom: 6px;
+}
+
+.tour-tab {
+    border: none;
+    background: transparent;
+    padding: 8px 18px;
+    border-radius: 999px;
+    font-size: 14px;
+    font-weight: 600;
+    color: #666;
+    cursor: pointer;
+    transition: 0.18s ease;
+    white-space: nowrap;
+}
+
+.tour-tab:hover {
+    background: #f1f1f1;
+    color: #333;
+}
+
+.tour-tab.active {
+    background: linear-gradient(135deg, #FF7043, #FF416C);
+    color: #ffffff;
+    box-shadow: 0 6px 16px rgba(255,65,108,0.35);
+}
+
+/* Контент вкладок */
+.tour-tabs-content {
+    margin-top: 24px;
+}
+
+.tab-pane {
+    display: none;
+}
+
+.tab-pane.active {
+    display: block;
+}
+
+/* ===== LAYOUT ВНУТРИ OVERVIEW ===== */
+
+.tour-layout {
+    display: grid;
+    grid-template-columns: minmax(0, 2.1fr) minmax(260px, 1fr);
+    gap: 24px;
+}
+
+/* Карточки общие */
+.card {
+    background: #ffffff;
+    border-radius: 12px;
+    padding: 18px 20px;
+    box-shadow: 0 4px 14px rgba(0,0,0,0.04);
+    margin-bottom: 18px;
+}
+
+.card.subtle {
+    background: #fff7fa;
+}
+
+.card-title {
+    font-size: 18px;
+    font-weight: 700;
+    margin-bottom: 12px;
+}
+
+.card-text {
+    font-size: 14px;
+    line-height: 1.6;
+    color: #444;
+}
+
+/* расстояние между карточками */
+.tour-left .card + .card,
+.tour-right .card + .card {
+    margin-top: 10px;
+}
+
+/* Инфо-строки в карточках */
+.info-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 7px 0;
+    font-size: 14px;
+    border-bottom: 1px solid #f1f1f1;
+}
+
+.info-row:last-child {
+    border-bottom: none;
+}
+
+.info-label {
+    color: #888;
+}
+
+.info-value {
+    font-weight: 600;
+}
+
+/* маленький текст */
+.small-note {
+    font-size: 13px;
+    color: #666;
+}
+
+
+/* ===== ТАБЛИЦЫ (TEAMS, MATCHES, STANDINGS) ===== */
+
+.card .table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 10px;
+    font-size: 14px;
+}
+
+/* Заголовок таблицы */
+.card .table thead {
+    background: #f7f7f7;
+}
+
+.card .table th {
+    text-align: left;
+    padding: 9px 10px;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: #777;
+    border-bottom: 2px solid #FF7043;
+}
+
+/* Тело таблицы */
+.card .table td {
+    padding: 8px 10px;
+    border-bottom: 1px solid #f0f0f0;
+    color: #333;
+}
+
+/* Зебра */
+.card .table tbody tr:nth-child(even) {
+    background: #fafafa;
+}
+
+/* Hover эффект */
+.card .table tbody tr:hover {
+    background: #fff3f0;
+}
+
+/* Ячейка очков */
+.card .table .cell-points {
+    font-weight: 800;
+    color: #FF416C;
+}
+
+/* Для standings, чтобы таблица казалась “чуть компактнее”, но не мелкой */
+.table-standings td,
+.table-standings th {
+    padding-top: 7px;
+    padding-bottom: 7px;
+}
+
+/* Пустой текст */
+.empty-text {
+    font-size: 14px;
+    color: #777;
+    padding: 4px 0 2px;
+}
+
+
+/* ===== RESPONSIVE ===== */
+
+@media (max-width: 1024px) {
+    .tour-stats {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .tour-layout {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 768px) {
+    .tour-hero-inner {
+        flex-direction: column-reverse;
+        align-items: flex-start;
+    }
+
+    .tour-title {
+        font-size: 24px;
+    }
+
+    .tour-main {
+        padding: 20px 14px 36px;
+    }
+
+    .tour-stats {
+        grid-template-columns: 1fr 1fr;
+        gap: 10px;
+    }
+
+    .card {
+        padding: 14px 14px;
+    }
+
+    .card .table {
+        font-size: 13px;
+    }
+}
+
+@media (max-width: 480px) {
+    .tour-stats {
+        grid-template-columns: 1fr;
+    }
+
+    .tour-tabs {
+        gap: 6px;
+    }
+
+    .tour-tab {
+        padding: 7px 14px;
+        font-size: 13px;
+    }
+}
+
+/* =============================
+   FIX FOR TABLE WIDTHS
+   ============================= */
+
+/* Карточки табов (Teams, Matches, Standings) должны быть на всю ширину */
+#tab-teams .card,
+#tab-matches .card,
+#tab-standings .card {
+    width: 100%;
+    max-width: 100%;
+}
+
+/* Сами таблицы */
+.table {
+    width: 100%;
+    min-width: 100%;
+}
+
+/* Таблица Standings — тоже растягиваем */
+.table-standings {
+    width: 100%;
+}
+
+/* Контейнер табов — летит на всю ширину */
+.tab-pane {
+    width: 100%;
+}
+
+/* Убираем возможные ограничения */
+.tour-layout,
+.tour-main,
+.tour-tabs-content {
+    width: 100%;
+    max-width: 1200px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+
+/* ===================== BRACKET (SVG LINES) ===================== */
+
+#tab-bracket {
+    padding-top: 10px;
+}
+
+.br-title-main {
+    font-size: 22px;
+    font-weight: 800;
+    margin: 0 0 14px 4px;
+}
+
+/* Контейнер всей сетки */
+.bracket-wrapper {
+    position: relative;
+    padding: 10px 0 40px;
+}
+
+/* SVG-слой с линиями */
+.bracket-lines {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+}
+
+/* Колонки раундов */
+.bracket-grid {
+    --br-rounds: 3;
+    display: grid;
+    grid-template-columns: repeat(var(--br-rounds), minmax(220px, 1fr));
+    column-gap: 70px;
+}
+
+/* Один раунд */
+.br-round {
+    position: relative;
+}
+
+/* Заголовок раунда */
+.br-round-title {
+    text-align: center;
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: #ff416c;
+    margin-bottom: 12px;
+}
+
+/* Список матчей */
+.br-round-matches {
+    display: flex;
+    flex-direction: column;
+    gap: 22px;
+}
+
+/* Карточка матча */
+.br-match {
+    position: relative;
+    background: #ffffff;
+    border-radius: 12px;
+    border: 1px solid #e4e4e4;
+    padding: 8px 12px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.04);
+}
+
+/* Строки команды */
+.br-team-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 13px;
+    padding: 2px 0;
+}
+
+.br-team-name {
+    flex: 1;
+    margin-right: 10px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.br-team-score {
+    min-width: 18px;
+    text-align: right;
+    font-weight: 700;
+    color: #444;
+}
+
+/* Победитель */
+.br-team-row.winner {
+    color: #ff416c;
+    font-weight: 700;
+}
+
+/* --- Адаптив --- */
+
+@media (max-width: 900px) {
+    .bracket-lines {
+        display: none; /* на мобиле убираем линии, чтобы не было каши */
+    }
+
+    .bracket-grid {
+        grid-template-columns: 1fr;
+        row-gap: 32px;
+    }
+
+    .br-round-matches {
+        gap: 16px;
+    }
+}

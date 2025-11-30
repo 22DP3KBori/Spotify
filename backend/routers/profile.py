@@ -2,16 +2,18 @@ from datetime import date, datetime, timedelta
 from pathlib import Path
 import uuid, random
 
-from fastapi import APIRouter, Request, Form, UploadFile, File, Depends, Query
-from fastapi.responses import RedirectResponse
+from fastapi import APIRouter, Request, Form, UploadFile, File, Depends, Query, HTTPException
+from fastapi.responses import HTMLResponse, RedirectResponse
 from sqlalchemy.orm import Session
 
 from backend.database import get_db
-from backend.models import User, EmailVerificationCode
+from backend.models import User, EmailVerificationCode, UserFrame
 from backend.routers.country_list import countries
 from backend.core.templates import templates
 from backend.core.auth import current_user
 from backend.services.email_service import send_email
+from sqlalchemy.orm import joinedload
+
 
 router = APIRouter()
 
@@ -204,3 +206,48 @@ async def verify_email_code(code: str = Form(...), request: Request = None, db: 
 def check_nickname(nickname: str = Query(...), db: Session = Depends(get_db)):
     exists = db.query(User).filter(User.nickname == nickname).first()
     return {"available": not bool(exists)}
+
+
+"""@router.get("/profile/customize", response_class=HTMLResponse)
+def avatar_settings(
+    request: Request,
+    user: User = Depends(current_user),
+    db: Session = Depends(get_db)
+):
+    if not user:
+        return RedirectResponse("/auth")
+
+    # ✅ повторно загружаем юзера внутри активной сессии
+    user_db = (
+        db.query(User)
+        .options(
+            joinedload(User.frames).joinedload(UserFrame.frame),          # рамки
+            joinedload(User.inventory).joinedload(UserInventory.theme),   # темы
+        )
+        .filter(User.id == user.id)
+        .first()
+    )
+
+    if not user_db:
+        raise HTTPException(404, "User not found")
+
+    # ✅ Собираем купленные темы
+    owned_themes = []
+    for item in user_db.inventory:
+        if item.theme_id:
+            owned_themes.append({
+                "id": item.theme.id,
+                "name": item.theme.name,
+                "preview": item.theme.preview_image,
+                "css_class": item.theme.css_class,
+                "equipped": item.equipped,
+            })
+
+    return templates.TemplateResponse(
+        "avatar_settings.html",
+        {
+            "request": request,
+            "user": user_db,  # важный момент — пользователь привязан к сессии
+            "themes": owned_themes
+        }
+    )"""

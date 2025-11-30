@@ -400,3 +400,22 @@ footer {
 }
 
 
+body.theme-neon {
+  --bg-card: #1a1a2e;
+  --text: #ffffff;
+  --shadow: 0 0 15px rgba(0, 255, 200, 0.2);
+}
+
+body.theme-fire {
+  --bg-card: #2e1a1a;
+  --text: #ffdddd;
+  --shadow: 0 0 15px rgba(255, 50, 0, 0.3);
+}
+
+body.theme-ice {
+  --bg-card: #e0f4ff;
+  --text: #002233;
+  --shadow: 0 0 15px rgba(0, 150, 255, 0.2);
+}
+
+

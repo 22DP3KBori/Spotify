@@ -57,18 +57,22 @@ class User(Base):
     created_at = Column(DateTime, default=datetime.utcnow)
     xp = Column(Integer, default=0)
     level = Column(Integer, default=1)
+    #active_theme = Column(Integer, ForeignKey("profile_themes.id"), nullable=True)
 
 
     # 🔹 связь с ролью
     role_id = Column(Integer, ForeignKey("roles.id"))
     role = relationship("Role", back_populates="users")
     achievements = relationship("UserAchievement", back_populates="user", cascade="all, delete-orphan")
-
+    
     # 🔹 обратные связи
     teams = relationship("Team", back_populates="creator")
     tournaments = relationship("Tournament", back_populates="creator")
     comments = relationship("Comment", back_populates="user")
-
+    #theme = relationship("ProfileTheme")
+   # active_theme_rel = relationship("ProfileTheme", foreign_keys=[active_theme])
+    #themes = relationship("UserTheme", back_populates="user", cascade="all, delete-orphan")
+    #inventory = relationship("UserInventory", backref="user")
 
 # -----------------------------------------------------
 # Команды
@@ -108,6 +112,11 @@ class Tournament(Base):
     start_date = Column(DateTime)
     end_date = Column(DateTime)
     is_active = Column(Boolean, default=True)
+    discipline = Column(String(50), nullable=False, default="Unknown")  # <-- ДОБАВИМ ЭТО
+    format = Column(String(50), nullable=False)  # single_elim, double_elim, swiss...
+    team_count = Column(Integer, default=0)
+    status = Column(String(30), default="Planned")  # Planned / Registration / Live / Completed
+
 
     creator = relationship("User", back_populates="tournaments")
     teams = relationship(
@@ -132,6 +141,7 @@ class Match(Base):
     score_team1 = Column(Integer, default=0)
     score_team2 = Column(Integer, default=0)
     match_date = Column(DateTime, default=datetime.utcnow)
+    round_number = Column(Integer, nullable=False, default=1)
 
     tournament = relationship("Tournament", back_populates="matches")
     team1 = relationship("Team", foreign_keys=[team1_id], back_populates="matches_as_team1")
@@ -168,8 +178,9 @@ class EmailVerificationCode(Base):
 # -----------------------------------------------------
 # Темы профиля и инвентарь пользователей
 # -----------------------------------------------------
-class ProfileTheme(Base):
+'''class ProfileTheme(Base):
     __tablename__ = "profile_themes"
+
     id = Column(Integer, primary_key=True)
     name = Column(String(50))
     type = Column(String(20))
@@ -177,13 +188,38 @@ class ProfileTheme(Base):
     rarity = Column(String(20))
     preview_image = Column(String(255))
     css_class = Column(String(255))
+'''
+    # связь с UserTheme
+    #users = relationship("UserTheme", back_populates="theme", cascade="all, delete-orphan")
 
 
+#-----------------------------------------------------
+# Связь пользователь–тема
+#-----------------------------------------------------
+'''class UserTheme(Base):
+    __tablename__ = "user_themes"
+
+    id = Column(Integer, primary_key=True)
+    user_id = Column(Integer, ForeignKey("users.id"))
+    theme_id = Column(Integer, ForeignKey("profile_themes.id"))
+    equipped = Column(Boolean, default=False)
+
+    user = relationship("User", back_populates="themes")
+    theme = relat   ionship("ProfileTheme", back_populates="users")
+'''
+
+
+'''
 class UserInventory(Base):
     __tablename__ = "user_inventory"
     id = Column(Integer, primary_key=True)
     user_id = Column(Integer, ForeignKey("users.id"))
     theme_id = Column(Integer, ForeignKey("profile_themes.id"))
+    equipped = Column(Boolean, default=False)
+
+    theme = relationship("ProfileTheme")
+'''
+
 
 
 # -----------------------------------------------------
@@ -197,6 +233,7 @@ class ProfileFrame(Base):
     name = Column(String(100), nullable=False)
     image_url = Column(String(255), nullable=False)  # PNG overlay
     price = Column(Integer, nullable=False, default=0)
+    rarity = Column(String(50), default="default")
 
     # Например:
     # name = "Gold Frame"
@@ -222,7 +259,7 @@ class Achievement(Base):
     name = Column(String(100), nullable=False)
     description = Column(Text)
     icon_url = Column(String(255))
-    xp_reward = Column(Integer, default=50)
+    xp_reward = Column(Integer, default=50) 
 
     def __repr__(self):
         return f"<Achievement(name={self.name})>"
@@ -239,3 +276,30 @@ class UserAchievement(Base):
 
     user = relationship("User", back_populates="achievements")
     achievement = relationship("Achievement")
+
+
+class ProfileBadge(Base):
+    __tablename__ = "profile_badges"
+
+    id = Column(Integer, primary_key=True)
+    name = Column(String(100), nullable=False)
+    description = Column(Text)
+    price = Column(Integer, nullable=False)
+    icon_url = Column(String(255), nullable=False)  # путь к иконке
+    rarity = Column(String(50), default="common")
+
+    def __repr__(self):
+        return f"<ProfileBadge(name={self.name}, price={self.price})>"
+
+
+class UserBadge(Base):
+    __tablename__ = "user_badges"
+
+    id = Column(Integer, primary_key=True)
+    user_id = Column(Integer, ForeignKey("users.id"))
+    badge_id = Column(Integer, ForeignKey("profile_badges.id"))
+    acquired_at = Column(DateTime, default=datetime.utcnow)
+    equipped = Column(Boolean, default=False)
+
+    user = relationship("User", backref="badges")
+    badge = relationship("ProfileBadge")

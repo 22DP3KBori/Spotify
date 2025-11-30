@@ -84,7 +84,9 @@ WHITELIST = {
     "/auth", "/register", "/login",
     "/setup-profile", "/save-profile",
     "/static", "/check-nickname",
+    "/tournaments"
 }
+
 
 # ---------------------- Middleware ----------------------
 def path_in_whitelist(path: str) -> bool:
@@ -92,6 +94,7 @@ def path_in_whitelist(path: str) -> bool:
 
 @app.middleware("http")
 async def enforce_profile_completion(request: Request, call_next):
+    print("MIDDLEWARE:", request.url.path)
     if request.url.path.startswith("/static"):
         return await call_next(request)
 
@@ -209,3 +212,19 @@ app.include_router(frames.router)
 from backend.routers import avatar_settings
 app.include_router(avatar_settings.router)
 
+#---------------------- Themes routes ----------------------
+'''from backend.routers import themes
+app.include_router(themes.router)
+'''
+#---------------------- Badges routes ----------------------
+from backend.routers.badges import router as badges_router
+app.include_router(badges_router)
+
+
+#---------------------- Tournaments routes ----------------------
+from backend.routers import tournaments
+app.include_router(tournaments.router)
+
+
+for route in app.routes:
+    print("ROUTE:", route.path)

@@ -1,7 +1,7 @@
 {% include "layout/navbar.html" %}
 <link rel="stylesheet" href="/static/style.css">
-<link rel="stylesheet" href="/static/store.css?v=2
-">
+<link rel="stylesheet" href="/static/store.css?v=4">
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
 
 <div class="store-wrapper">
 
@@ -17,37 +17,62 @@
 
   <div class="store-tabs">
     <button class="tab-btn active" data-tab="frames">🖼 Frames</button>
-    <button class="tab-btn" data-tab="themes">🎨 Themes</button>
+    <button class="tab-btn" data-tab="badges">🏅 Badges</button>
     <button class="tab-btn" data-tab="other">✨ Other</button>
   </div>
 
   <div id="tab-frames" class="tab-content active">
     <div class="store-grid">
         {% for frame in frames %}
-        <div class="store-item">
-            <div class="frame-preview">
-            <img src="{{ frame.image_url }}" alt="{{ frame.name }}">
+        <div class="store-item {{ frame.rarity }}">
+            <div class="item-preview">
+                <img src="{{ frame.image_url }}" alt="{{ frame.name }}">
             </div>
 
+            <div class="rarity-tag {{ frame.rarity }}">{{ frame.rarity }}</div>
+
             <h3>{{ frame.name }}</h3>
-            <p class="price">
-            <i class="fa-solid fa-coins" style="color: gold;"></i> {{ frame.price }}
-            </p>
+
+            <p class="price"><i class="fa-solid fa-coins"></i> {{ frame.price }}</p>
 
             {% if frame.id in owned_frames %}
-            <button class="owned-btn" disabled>Already owned ✅</button>
+                <button class="owned-btn" disabled>Owned ✔</button>
             {% else %}
-            <button class="buy-btn" onclick="buyFrame({{ frame.id }})">
-                Buy
-            </button>
+                <button class="buy-btn" onclick="buyFrame({{ frame.id }})">Buy</button>
             {% endif %}
         </div>
         {% endfor %}
     </div>
   </div>
+  
+  <div id="tab-badges" class="tab-content">
+        <div class="store-grid">
+            {% for badge in badges %}
+            <div class="store-item {{ badge.rarity }}">
+                <div class="item-preview">
+                    <img src="{{ badge.icon_url }}" alt="{{ badge.name }}">
+                </div>
+
+                <div class="rarity-tag {{ badge.rarity }}">{{ badge.rarity }}</div>
+
+                <h3>{{ badge.name }}</h3>
+
+                <p class="price"><i class="fa-solid fa-coins"></i> {{ badge.price }}</p>
+
+                {% if badge.id in owned_badges %}
+                    <button class="owned-btn" disabled>Owned ✔</button>
+                {% else %}
+                    <button class="buy-btn" onclick="buyBadge({{ badge.id }})">Buy</button>
+                {% endif %}
+            </div>
+            {% endfor %}
 
 
-  <div id="tab-themes" class="tab-content"><h2>🎨 Coming soon...</h2></div>
+        </div>
+    </div>
+
+
+
   <div id="tab-other" class="tab-content"><h2>✨ Coming soon...</h2></div>
 </div>
 

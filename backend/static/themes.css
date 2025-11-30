@@ -1,0 +1,26 @@
+/* NEON */
+.theme-neon {
+    --bg-main: #0d0d0d;
+    --bg-card: #111;
+    --accent: #00ffff;
+    --text: #eee;
+    --shadow: 0 0 20px rgba(0,255,255,0.5);
+}
+
+/* FIRE */
+.theme-fire {
+    --bg-main: #1a0000;
+    --bg-card: #2d0e0e;
+    --accent: #ff5500;
+    --text: #fff3e0;
+    --shadow: 0 0 25px rgba(255, 80, 0, 0.4);
+}
+
+/* ICE */
+.theme-ice {
+    --bg-main: #001f33;
+    --bg-card: #00324d;
+    --accent: #66ccff;
+    --text: #e6faff;
+    --shadow: 0 0 20px rgba(0,170,255,0.4);
+}
